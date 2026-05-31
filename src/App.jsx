@@ -7,7 +7,7 @@ import BlogPage from './pages/BlogPage';
 
 function HomePage({ introActive, setIntroActive }) {
   return (
-    <div className="shell">
+    <div className={`shell${introActive ? '' : ' ready'}`}>
       {introActive && <IntroOverlay onDone={() => setIntroActive(false)} />}
       <LeftPanel />
       <RightPanel />

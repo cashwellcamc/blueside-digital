@@ -360,6 +360,37 @@ html, body {
   color: rgba(255, 255, 255, 0.55);
 }
 
+/* ─── REVEAL ANIMATIONS ─────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Hidden until intro completes */
+.divider,
+.tagline,
+.contact-block,
+.availability,
+.eyebrow,
+.right-heading,
+.tech-section,
+.services-grid {
+  opacity: 0;
+}
+
+/* Staggered left panel reveal */
+.shell.ready .divider            { animation: fadeUp 0.55s ease 0.05s forwards; }
+.shell.ready .tagline            { animation: fadeUp 0.55s ease 0.22s forwards; }
+.shell.ready .left > :nth-child(4) { animation: fadeUp 0.55s ease 0.38s forwards; }
+.shell.ready .left > :nth-child(5) { animation: fadeUp 0.55s ease 0.50s forwards; }
+.shell.ready .availability       { animation: fadeUp 0.55s ease 0.62s forwards; }
+
+/* Staggered right panel reveal */
+.shell.ready .eyebrow            { animation: fadeUp 0.55s ease 0.30s forwards; }
+.shell.ready .right-heading      { animation: fadeUp 0.55s ease 0.48s forwards; }
+.shell.ready .tech-section       { animation: fadeUp 0.55s ease 0.66s forwards; }
+.shell.ready .services-grid      { animation: fadeUp 0.55s ease 0.86s forwards; }
+
 /* ─── INTRO ──────────────────────────────── */
 
 /*
