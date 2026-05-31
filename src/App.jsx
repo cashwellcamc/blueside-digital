@@ -1,16 +1,27 @@
 import { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import LeftPanel from './components/LeftPanel';
 import RightPanel from './components/RightPanel';
 import IntroOverlay from './components/IntroOverlay';
+import BlogPage from './pages/BlogPage';
 
-export default function App() {
-  const [introActive, setIntroActive] = useState(true);
-
+function HomePage({ introActive, setIntroActive }) {
   return (
     <div className="shell">
       {introActive && <IntroOverlay onDone={() => setIntroActive(false)} />}
       <LeftPanel />
       <RightPanel />
     </div>
+  );
+}
+
+export default function App() {
+  const [introActive, setIntroActive] = useState(true);
+
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage introActive={introActive} setIntroActive={setIntroActive} />} />
+      <Route path="/blog" element={<BlogPage />} />
+    </Routes>
   );
 }

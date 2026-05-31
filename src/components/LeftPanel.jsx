@@ -23,6 +23,13 @@ export default function LeftPanel() {
         </a>
       </div>
 
+      <div className="contact-block" style={{ marginTop: '1.2rem' }}>
+        <div className="contact-label">Writing</div>
+        <a className="contact-link" href="#/blog">
+          Articles &amp; Insights
+        </a>
+      </div>
+
       <div className="availability">
         <span className="dot" />
         Available for new engagements
