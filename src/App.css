@@ -225,11 +225,30 @@ html, body {
   align-self: center;
 }
 
-.tech-icons {
+/* ─── MARQUEE ───────────────────────────── */
+.tech-marquee {
+  flex: 1;
+  overflow: hidden;
+  /* soft fade on both edges so icons don't hard-clip */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 10%, #000 90%, transparent 100%);
+  mask-image:         linear-gradient(to right, transparent 0%, #000 10%, #000 90%, transparent 100%);
+}
+
+.tech-marquee-track {
   display: flex;
   align-items: center;
-  gap: 1.6rem;
-  flex-wrap: wrap;
+  gap: 2rem;
+  width: max-content;
+  animation: marquee-ltr linear infinite;
+}
+
+.tech-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-ltr {
+  from { transform: translateX(-25%); }
+  to   { transform: translateX(0%); }
 }
 
 .tech-item {
@@ -240,10 +259,15 @@ html, body {
   color: rgba(255, 255, 255, 0.90);
 }
 
-.tech-item i,
-.tech-item svg {
-  font-size: 2.4rem;
+.tech-item i {
+  font-size: 1.9rem;
   line-height: 1;
+  display: block;
+}
+
+.tech-item svg {
+  width: 1.9rem;
+  height: 1.9rem;
   display: block;
 }
 
@@ -313,6 +337,110 @@ html, body {
   color: var(--white);
 }
 
+.service-card.featured {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.service-card.featured:hover {
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.service-card.featured .service-icon {
+  font-size: 2rem;
+  margin-bottom: 0;
+  flex-shrink: 0;
+  opacity: 0.75;
+}
+
+.service-card.featured .service-desc {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ─── INTRO ──────────────────────────────── */
+
+/*
+  White panel: anchored left: 0, width transitions 100% → 36%.
+  Blue panel:  anchored right: 0, width 64%, slides in via translateX.
+  At every frame: white right-edge = blue left-edge (same easing, same duration).
+  Result: a true physical push — no gaps, no fades between the two panels.
+*/
+
+.intro-white {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: 100%;           /* squeezes to 36% on push */
+  z-index: 500;
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+  transition:
+    width   0.95s cubic-bezier(0.76, 0, 0.24, 1),
+    opacity 0.38s ease;
+}
+
+/* Squeeze left as blue slides in */
+.intro-white.intro-push,
+.intro-white.intro-exit { width: 36%; }
+
+.intro-white.intro-exit { opacity: 0; }
+
+/* Blue panel — slides in from right, always flush with white's right edge */
+.intro-blue {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: 64%;
+  z-index: 499;          /* just behind white (they're never overlapping) */
+  background: var(--blue);
+  pointer-events: none;
+  transform: translateX(100%);
+  transition:
+    transform 0.95s cubic-bezier(0.76, 0, 0.24, 1),
+    opacity   0.38s ease;
+}
+
+.intro-blue.intro-push,
+.intro-blue.intro-exit { transform: translateX(0); }
+
+.intro-blue.intro-exit  { opacity: 0; }
+
+/* Centered logo — font larger than final left-panel size for full-screen impact */
+.intro-logo { text-align: center; }
+
+.intro-logo .wordmark-main {
+  font-size: 4rem;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.55s ease 0.12s, transform 0.55s ease 0.12s;
+}
+
+.intro-logo .wordmark-sub {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.50s ease 0.28s, transform 0.50s ease 0.28s;
+}
+
+.intro-white.intro-enter .intro-logo .wordmark-main,
+.intro-white.intro-push  .intro-logo .wordmark-main,
+.intro-white.intro-enter .intro-logo .wordmark-sub,
+.intro-white.intro-push  .intro-logo .wordmark-sub {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Mobile: skip the push, just fade both out */
+@media (max-width: 940px) {
+  .intro-white.intro-push,
+  .intro-white.intro-exit { width: 100%; }
+  .intro-blue { display: none; }
+}
+
 /* ─── RESPONSIVE ────────────────────────── */
 @media (max-width: 940px) {
   .shell         { flex-direction: column; min-height: auto; }
@@ -327,14 +455,16 @@ html, body {
 @media (max-width: 560px) {
   .left          { padding: 2.4rem 1.5rem 2rem; }
   .right         { padding: 2.4rem 1.5rem 3rem; }
-  .tech-cat      { min-width: 62px; font-size: 0.54rem; padding-right: 0.8rem; }
-  .tech-item i   { font-size: 1.9rem; }
-  .tech-icons    { gap: 1rem; }
+  .tech-cat             { min-width: 62px; font-size: 0.54rem; padding-right: 0.8rem; }
+  .tech-item i          { font-size: 1.6rem; }
+  .tech-item svg        { width: 1.6rem; height: 1.6rem; }
+  .tech-marquee-track   { gap: 1.4rem; }
   .services-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 380px) {
   .services-grid { grid-template-columns: 1fr; }
-  .tech-icons    { gap: 1rem; }
-  .tech-item i   { font-size: 1.8rem; }
+  .tech-marquee-track   { gap: 1rem; }
+  .tech-item i          { font-size: 1.5rem; }
+  .tech-item svg        { width: 1.5rem; height: 1.5rem; }
 }
