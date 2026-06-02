@@ -1,2 +1,8 @@
 dist
 node_modules
+studio/node_modules
+studio/dist
+.env
+.env.local
+studio/.env
+studio/.env.local

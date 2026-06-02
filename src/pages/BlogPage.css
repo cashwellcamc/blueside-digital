@@ -69,6 +69,16 @@
   gap: 4rem;
 }
 
+/* ─── LOADING / EMPTY ────────────────────────────────────────────────────── */
+.blog-loading,
+.blog-empty {
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+  padding: 4rem 0;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
 /* ─── ARTICLE ────────────────────────────────────────────────────────────── */
 .blog-article {
   border-top: 2px solid var(--blue-light);
