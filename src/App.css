@@ -379,11 +379,12 @@ html, body {
 }
 
 /* Staggered left panel reveal */
-.shell.ready .divider            { animation: fadeUp 0.55s ease 0.05s forwards; }
-.shell.ready .tagline            { animation: fadeUp 0.55s ease 0.22s forwards; }
+.shell.ready .divider              { animation: fadeUp 0.55s ease 0.05s forwards; }
+.shell.ready .tagline              { animation: fadeUp 0.55s ease 0.22s forwards; }
 .shell.ready .left > :nth-child(4) { animation: fadeUp 0.55s ease 0.38s forwards; }
 .shell.ready .left > :nth-child(5) { animation: fadeUp 0.55s ease 0.50s forwards; }
-.shell.ready .availability       { animation: fadeUp 0.55s ease 0.62s forwards; }
+.shell.ready .left > :nth-child(6) { animation: fadeUp 0.55s ease 0.60s forwards; }
+.shell.ready .availability         { animation: fadeUp 0.55s ease 0.70s forwards; }
 
 /* Staggered right panel reveal */
 .shell.ready .eyebrow            { animation: fadeUp 0.55s ease 0.30s forwards; }
