@@ -5,6 +5,7 @@ import RightPanel from './components/RightPanel';
 import IntroOverlay from './components/IntroOverlay';
 import BlogPage from './pages/BlogPage';
 import CaseStudiesPage from './pages/CaseStudiesPage';
+import ContactPage from './pages/ContactPage';
 
 function HomePage({ introActive, setIntroActive }) {
   return (
@@ -24,6 +25,7 @@ export default function App() {
       <Route path="/" element={<HomePage introActive={introActive} setIntroActive={setIntroActive} />} />
       <Route path="/blog" element={<BlogPage />} />
       <Route path="/case-studies" element={<CaseStudiesPage />} />
+      <Route path="/contact" element={<ContactPage />} />
     </Routes>
   );
 }

@@ -141,6 +141,10 @@ export default function RightPanel() {
             </div>
           ))}
         </div>
+
+        <div className="cta-strip">
+          <a href="#/contact" className="cta-strip-btn">Let's Work Together →</a>
+        </div>
       </div>
     </div>
   );

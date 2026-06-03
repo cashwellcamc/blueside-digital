@@ -360,6 +360,58 @@ html, body {
   color: rgba(255, 255, 255, 0.55);
 }
 
+/* ─── LEFT PANEL CTA ────────────────────────────────────── */
+.cta-ghost {
+  display: inline-block;
+  margin-top: 1.4rem;
+  padding: 0.52rem 1.15rem;
+  border: 1.5px solid var(--blue-mid);
+  border-radius: 3px;
+  color: var(--blue-mid);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: background 0.18s, color 0.18s;
+  opacity: 0;
+}
+
+.shell.ready .cta-ghost { animation: fadeUp 0.55s ease 0.82s forwards; }
+
+.cta-ghost:hover {
+  background: var(--blue-mid);
+  color: var(--white);
+}
+
+/* ─── RIGHT PANEL CTA STRIP ─────────────────────────────── */
+.cta-strip {
+  margin-top: 1.8rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  padding-top: 1.6rem;
+  opacity: 0;
+}
+
+.shell.ready .cta-strip { animation: fadeUp 0.55s ease 1.0s forwards; }
+
+.cta-strip-btn {
+  display: block;
+  width: 100%;
+  padding: 0.88rem;
+  background: var(--white);
+  color: var(--blue);
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  border-radius: 3px;
+  transition: opacity 0.18s, transform 0.12s;
+}
+
+.cta-strip-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+.cta-strip-btn:active { transform: translateY(0); }
+
 /* ─── REVEAL ANIMATIONS ─────────────────────────────────── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(10px); }

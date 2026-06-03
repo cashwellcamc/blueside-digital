@@ -41,6 +41,8 @@ export default function LeftPanel() {
         <span className="dot" />
         Available for new engagements
       </div>
+
+      <a href="#/contact" className="cta-ghost">Let's Work Together →</a>
     </div>
   );
 }
