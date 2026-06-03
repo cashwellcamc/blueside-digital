@@ -23,8 +23,7 @@ const WORK_TYPES = [
   'Audit', 'Analytics Setup', 'API Integration', 'Retainer',
 ];
 
-// Replace with your Formspree endpoint — https://formspree.io/f/{your-id}
-const FORMSPREE_URL = 'https://formspree.io/f/YOUR_FORM_ID';
+const FORMSPREE_URL = 'https://formspree.io/f/xbdejore';
 
 export default function ContactPage() {
   const [discipline, setDiscipline]   = useState('');
