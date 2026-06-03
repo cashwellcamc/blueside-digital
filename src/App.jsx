@@ -4,6 +4,7 @@ import LeftPanel from './components/LeftPanel';
 import RightPanel from './components/RightPanel';
 import IntroOverlay from './components/IntroOverlay';
 import BlogPage from './pages/BlogPage';
+import ArticlePage from './pages/ArticlePage';
 import CaseStudiesPage from './pages/CaseStudiesPage';
 import ContactPage from './pages/ContactPage';
 
@@ -24,6 +25,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<HomePage introActive={introActive} setIntroActive={setIntroActive} />} />
       <Route path="/blog" element={<BlogPage />} />
+      <Route path="/blog/:slug" element={<ArticlePage />} />
       <Route path="/case-studies" element={<CaseStudiesPage />} />
       <Route path="/contact" element={<ContactPage />} />
     </Routes>

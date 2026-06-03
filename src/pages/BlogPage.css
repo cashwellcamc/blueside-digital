@@ -106,6 +106,15 @@
   letter-spacing: 0.06em;
 }
 
+.blog-article-title-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.blog-article-title-link:hover .blog-article-title {
+  color: var(--blue-mid);
+}
+
 .blog-article-title {
   font-family: 'Playfair Display', serif;
   font-weight: 700;

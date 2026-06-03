@@ -18,3 +18,15 @@ export const ARTICLES_QUERY = `
     tags,
   }
 `;
+
+export const ARTICLE_BY_SLUG_QUERY = `
+  *[_type == "article" && slug.current == $slug && status == "published"][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    publishedAt,
+    "mainImage": mainImage.asset->url,
+    body,
+    tags,
+  }
+`;

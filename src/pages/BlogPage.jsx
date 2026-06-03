@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { PortableText } from '@portabletext/react';
 import { client, ARTICLES_QUERY } from '../lib/sanity.js';
 import './BlogPage.css';
 
@@ -13,28 +12,6 @@ function getExcerpt(body, maxChars = 220) {
     .trim();
   return text.length > maxChars ? text.slice(0, maxChars).trimEnd() + '…' : text;
 }
-
-/* ─── PORTABLE TEXT COMPONENTS ──────────────────────────────────────────── */
-const ptComponents = {
-  block: {
-    normal: ({ children }) => <p>{children}</p>,
-    h3:     ({ children }) => <h3>{children}</h3>,
-  },
-  marks: {
-    strong: ({ children }) => <strong>{children}</strong>,
-    em:     ({ children }) => <em>{children}</em>,
-    link:   ({ value, children }) => (
-      <a href={value.href} target={value.blank ? '_blank' : '_self'} rel="noreferrer">
-        {children}
-      </a>
-    ),
-  },
-  types: {
-    image: ({ value }) => (
-      <img src={value.asset?.url} alt={value.alt || ''} style={{ maxWidth: '100%', borderRadius: '4px', margin: '1em 0' }} />
-    ),
-  },
-};
 
 /* ─── SHARE ICONS ────────────────────────────────────────────────────────── */
 const XIcon = () => (
@@ -49,11 +26,13 @@ const LinkedInIcon = () => (
   </svg>
 );
 
-function shareUrl(platform, title) {
-  const url = encodeURIComponent('https://bluesidedigital.com/#/blog');
+const SITE = 'https://bluesidedigital.com';
+
+function shareUrl(platform, title, slug) {
+  const url  = encodeURIComponent(`${SITE}/#/blog/${slug}`);
   const text = encodeURIComponent(title);
-  if (platform === 'x') return `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-  if (platform === 'linkedin') return `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+  if (platform === 'x')        return `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+  if (platform === 'linkedin') return `https://www.linkedin.com/sharing/share-offsite/?url=${url}&title=${text}`;
 }
 
 function openShare(href) {
@@ -78,7 +57,6 @@ const Placeholder = () => (
 export default function BlogPage() {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [expanded, setExpanded] = useState({});
 
   useEffect(() => {
     document.title = 'Articles & Insights | Blueside Digital';
@@ -90,8 +68,6 @@ export default function BlogPage() {
       .then(data => { setArticles(data); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
-
-  const toggle = (id) => setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
 
   return (
     <div className="blog-shell">
@@ -122,7 +98,9 @@ export default function BlogPage() {
                 </span>
               )}
             </div>
-            <h2 className="blog-article-title">{article.title}</h2>
+            <Link to={`/blog/${article.slug}`} className="blog-article-title-link">
+              <h2 className="blog-article-title">{article.title}</h2>
+            </Link>
             <div className="blog-article-image">
               {article.mainImage
                 ? <img src={article.mainImage} alt={article.title} />
@@ -133,14 +111,14 @@ export default function BlogPage() {
               <span className="blog-share-label">Share</span>
               <button
                 className="blog-share-btn blog-share-btn--x"
-                onClick={() => openShare(shareUrl('x', article.title))}
+                onClick={() => openShare(shareUrl('x', article.title, article.slug))}
                 aria-label="Share on X (Twitter)"
               >
                 <XIcon /> X
               </button>
               <button
                 className="blog-share-btn blog-share-btn--li"
-                onClick={() => openShare(shareUrl('linkedin', article.title))}
+                onClick={() => openShare(shareUrl('linkedin', article.title, article.slug))}
                 aria-label="Share on LinkedIn"
               >
                 <LinkedInIcon /> LinkedIn
@@ -148,18 +126,10 @@ export default function BlogPage() {
             </div>
 
             <div className="blog-article-body">
-              {expanded[article._id]
-                ? <>
-                    {article.body && <PortableText value={article.body} components={ptComponents} />}
-                    {article.tags?.length > 0 && (
-                      <p className="blog-tags">{article.tags.map(t => `#${t}`).join(' ')}</p>
-                    )}
-                  </>
-                : <p className="blog-excerpt">{getExcerpt(article.body)}</p>
-              }
-              <button className="blog-read-more" onClick={() => toggle(article._id)}>
-                {expanded[article._id] ? 'Collapse ↑' : 'Read full article ↓'}
-              </button>
+              <p className="blog-excerpt">{getExcerpt(article.body)}</p>
+              <Link to={`/blog/${article.slug}`} className="blog-read-more">
+                Read full article ↓
+              </Link>
             </div>
           </article>
         ))}
