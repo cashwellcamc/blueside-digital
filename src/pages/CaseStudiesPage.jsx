@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './CaseStudiesPage.css';
 
@@ -16,6 +17,11 @@ const CASE_STUDIES = [
 ];
 
 export default function CaseStudiesPage() {
+  useEffect(() => {
+    document.title = 'Case Studies | Blueside Digital';
+    return () => { document.title = 'Blueside Digital | WCAG & ADA Accessibility Consulting'; };
+  }, []);
+
   return (
     <div className="cs-shell">
       <header className="blog-header">

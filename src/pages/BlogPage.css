@@ -220,6 +220,32 @@
   opacity: 0.75;
 }
 
+.blog-excerpt {
+  color: var(--ink-muted);
+  line-height: 1.75;
+}
+
+.blog-read-more {
+  display: inline-block;
+  margin-top: 1em;
+  padding: 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--blue-light);
+  color: var(--blue-mid);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.blog-read-more:hover {
+  color: var(--blue);
+  border-color: var(--blue);
+}
+
 .blog-tags {
   margin-top: 0.6em;
   font-size: 0.78rem;

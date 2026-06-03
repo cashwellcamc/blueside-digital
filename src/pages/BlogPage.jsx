@@ -4,6 +4,16 @@ import { PortableText } from '@portabletext/react';
 import { client, ARTICLES_QUERY } from '../lib/sanity.js';
 import './BlogPage.css';
 
+function getExcerpt(body, maxChars = 220) {
+  if (!body) return '';
+  const text = body
+    .filter(b => b._type === 'block' && b.children)
+    .map(b => b.children.map(c => c.text).join(''))
+    .join(' ')
+    .trim();
+  return text.length > maxChars ? text.slice(0, maxChars).trimEnd() + '…' : text;
+}
+
 /* ─── PORTABLE TEXT COMPONENTS ──────────────────────────────────────────── */
 const ptComponents = {
   block: {
@@ -44,12 +54,20 @@ const Placeholder = () => (
 export default function BlogPage() {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [expanded, setExpanded] = useState({});
+
+  useEffect(() => {
+    document.title = 'Articles & Insights | Blueside Digital';
+    return () => { document.title = 'Blueside Digital | WCAG & ADA Accessibility Consulting'; };
+  }, []);
 
   useEffect(() => {
     client.fetch(ARTICLES_QUERY)
       .then(data => { setArticles(data); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
+
+  const toggle = (id) => setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
 
   return (
     <div className="blog-shell">
@@ -88,10 +106,18 @@ export default function BlogPage() {
               }
             </div>
             <div className="blog-article-body">
-              {article.body && <PortableText value={article.body} components={ptComponents} />}
-              {article.tags?.length > 0 && (
-                <p className="blog-tags">{article.tags.map(t => `#${t}`).join(' ')}</p>
-              )}
+              {expanded[article._id]
+                ? <>
+                    {article.body && <PortableText value={article.body} components={ptComponents} />}
+                    {article.tags?.length > 0 && (
+                      <p className="blog-tags">{article.tags.map(t => `#${t}`).join(' ')}</p>
+                    )}
+                  </>
+                : <p className="blog-excerpt">{getExcerpt(article.body)}</p>
+              }
+              <button className="blog-read-more" onClick={() => toggle(article._id)}>
+                {expanded[article._id] ? 'Collapse ↑' : 'Read full article ↓'}
+              </button>
             </div>
           </article>
         ))}
