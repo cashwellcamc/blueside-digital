@@ -134,6 +134,18 @@ export default function ArticlePage() {
                 <p className="blog-tags">{article.tags.map(t => `#${t}`).join(' ')}</p>
               )}
             </div>
+
+            <div className="blog-byline">
+              <div className="blog-byline-name">Cameron Cashwell</div>
+              <p className="blog-byline-bio">
+                Blueside Digital is an independent consulting practice specializing in web accessibility,
+                WCAG 2.1 AA audits, Section 504/508 compliance, and full-stack digital work for healthcare,
+                pharma, and federal organizations. 13+ years of senior-level experience.
+              </p>
+              <a className="blog-byline-email" href="mailto:cashwell.digital@gmail.com">
+                cashwell.digital@gmail.com
+              </a>
+            </div>
           </article>
         )}
       </main>
