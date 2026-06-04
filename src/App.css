@@ -363,7 +363,7 @@ html, body {
 /* ─── LEFT PANEL CTA ────────────────────────────────────── */
 .cta-ghost {
   display: inline-block;
-  margin-top: 1.4rem;
+  margin-top: 0.3rem;
   padding: 0.52rem 1.15rem;
   border: 1.5px solid var(--blue-mid);
   border-radius: 3px;

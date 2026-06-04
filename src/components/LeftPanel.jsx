@@ -18,9 +18,7 @@ export default function LeftPanel() {
 
       <div className="contact-block">
         <div className="contact-label">Get in touch</div>
-        <a className="contact-link" href="mailto:cashwell.digital@gmail.com">
-          cashwell.digital@gmail.com
-        </a>
+        <a href="#/contact" className="cta-ghost">Let's Work Together →</a>
       </div>
 
       <div className="contact-block" style={{ marginTop: '1.2rem' }}>
@@ -41,8 +39,6 @@ export default function LeftPanel() {
         <span className="dot" />
         Available for new engagements
       </div>
-
-      <a href="#/contact" className="cta-ghost">Let's Work Together →</a>
     </div>
   );
 }
