@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { PortableText } from '@portabletext/react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { client, ARTICLE_BY_SLUG_QUERY } from '../lib/sanity.js';
 import './BlogPage.css';
 
@@ -16,6 +14,7 @@ const ptComponents = {
   marks: {
     strong: ({ children }) => <strong>{children}</strong>,
     em:     ({ children }) => <em>{children}</em>,
+    code:   ({ children }) => <code className="blog-inline-code">{children}</code>,
     link:   ({ value, children }) => (
       <a href={value.href} target={value.blank ? '_blank' : '_self'} rel="noreferrer">
         {children}
@@ -29,14 +28,7 @@ const ptComponents = {
     code: ({ value }) => (
       <div className="blog-code-block">
         {value.filename && <div className="blog-code-filename">{value.filename}</div>}
-        <SyntaxHighlighter
-          language={value.language || 'text'}
-          style={oneDark}
-          customStyle={{ margin: 0, borderRadius: value.filename ? '0 0 6px 6px' : '6px', fontSize: '0.84rem' }}
-          showLineNumbers={value.code?.split('\n').length > 5}
-        >
-          {value.code || ''}
-        </SyntaxHighlighter>
+        <pre><code>{value.code || ''}</code></pre>
       </div>
     ),
   },

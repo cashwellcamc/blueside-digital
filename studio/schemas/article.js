@@ -45,6 +45,7 @@ export const article = defineType({
             decorators: [
               { title: 'Bold', value: 'strong' },
               { title: 'Italic', value: 'em' },
+              { title: 'Code', value: 'code' },
             ],
             annotations: [
               {
