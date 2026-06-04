@@ -60,6 +60,28 @@ export const article = defineType({
           },
         },
         { type: 'image', options: { hotspot: true } },
+        {
+          type: 'code',
+          options: {
+            language: 'javascript',
+            languageAlternatives: [
+              { title: 'JavaScript', value: 'javascript' },
+              { title: 'TypeScript', value: 'typescript' },
+              { title: 'JSX', value: 'jsx' },
+              { title: 'TSX', value: 'tsx' },
+              { title: 'HTML', value: 'html' },
+              { title: 'CSS', value: 'css' },
+              { title: 'SCSS', value: 'scss' },
+              { title: 'JSON', value: 'json' },
+              { title: 'PHP', value: 'php' },
+              { title: 'Python', value: 'python' },
+              { title: 'Bash / Shell', value: 'bash' },
+              { title: 'XML', value: 'xml' },
+              { title: 'Plain Text', value: 'text' },
+            ],
+            withFilename: false,
+          },
+        },
       ],
     }),
     defineField({

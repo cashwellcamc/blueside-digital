@@ -9,9 +9,11 @@
     "deploy": "sanity deploy"
   },
   "dependencies": {
+    "@sanity/code-input": "^7.1.2",
     "@sanity/vision": "^5.29.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "react-syntax-highlighter": "^16.1.1",
     "sanity": "^5.29.0",
     "styled-components": "^6.0.0"
   }

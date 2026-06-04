@@ -222,6 +222,24 @@
 
 .blog-article-body a:hover { border-color: var(--blue-mid); }
 
+/* ─── CODE BLOCKS ────────────────────────────────────────────────────────── */
+.blog-code-block {
+  margin: 1.4em 0;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(13, 61, 107, 0.12);
+}
+
+.blog-code-filename {
+  background: #282c34;
+  color: rgba(255, 255, 255, 0.45);
+  font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
+  font-size: 0.72rem;
+  padding: 0.45rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  letter-spacing: 0.02em;
+}
+
 .blog-source {
   margin-top: 2em;
   font-size: 0.82rem;
