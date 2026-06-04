@@ -365,23 +365,22 @@ html, body {
   display: inline-block;
   margin-top: 0.3rem;
   padding: 0.52rem 1.15rem;
-  border: 1.5px solid var(--blue-mid);
+  background: var(--blue-mid);
+  border: none;
   border-radius: 3px;
-  color: var(--blue-mid);
+  color: var(--white);
   font-size: 0.76rem;
   font-weight: 500;
   letter-spacing: 0.04em;
   text-decoration: none;
-  transition: background 0.18s, color 0.18s;
+  transition: opacity 0.18s, transform 0.12s;
   opacity: 0;
 }
 
 .shell.ready .cta-ghost { animation: fadeUp 0.55s ease 0.82s forwards; }
 
-.cta-ghost:hover {
-  background: var(--blue-mid);
-  color: var(--white);
-}
+.cta-ghost:hover { opacity: 0.85; transform: translateY(-1px); }
+.cta-ghost:active { transform: translateY(0); }
 
 /* ─── RIGHT PANEL CTA STRIP ─────────────────────────────── */
 .cta-strip {
