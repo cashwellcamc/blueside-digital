@@ -224,32 +224,46 @@
 
 /* ─── CODE BLOCKS ────────────────────────────────────────────────────────── */
 .blog-code-block {
-  margin: 1.6em 0;
+  margin: 1.8em 0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
 }
 
-.blog-code-filename {
+.blog-code-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 1.1rem;
+  background: #1e1e2e;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.blog-code-dots {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.blog-code-dots span {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+
+.blog-code-dots span:nth-child(1) { background: #ff5f57; }
+.blog-code-dots span:nth-child(2) { background: #febc2e; }
+.blog-code-dots span:nth-child(3) { background: #28c840; }
+
+.blog-code-lang {
   font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
-  font-size: 0.72rem;
-  color: var(--ink-muted);
-  opacity: 0.6;
-  margin-bottom: 0.35rem;
-  letter-spacing: 0.03em;
-}
-
-.blog-code-block pre {
-  margin: 0;
-  border-left: 3px solid #0D3D6B;
-  padding: 0.75rem 0 0.75rem 1.25rem;
-  overflow-x: auto;
-  background: none;
-}
-
-.blog-code-block pre code {
-  font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
-  font-size: 0.84rem;
-  color: var(--ink-muted);
-  line-height: 1.7;
-  white-space: pre;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  flex: 1;
+  text-align: center;
+  padding-right: 2.5rem; /* optical balance against the dots */
 }
 
 /* ─── INLINE CODE ────────────────────────────────────────────────────────── */

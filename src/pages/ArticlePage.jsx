@@ -1,8 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { PortableText } from '@portabletext/react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { client, ARTICLE_BY_SLUG_QUERY } from '../lib/sanity.js';
 import './BlogPage.css';
+
+const LANG_LABELS = {
+  javascript: 'JavaScript', typescript: 'TypeScript', jsx: 'JSX', tsx: 'TSX',
+  html: 'HTML', css: 'CSS', scss: 'SCSS', json: 'JSON',
+  php: 'PHP', python: 'Python', bash: 'Bash', xml: 'XML', text: 'Plain Text',
+};
 
 const SITE = 'https://bluesidedigital.com';
 
@@ -27,8 +35,29 @@ const ptComponents = {
     ),
     code: ({ value }) => (
       <div className="blog-code-block">
-        {value.filename && <div className="blog-code-filename">{value.filename}</div>}
-        <pre><code>{value.code || ''}</code></pre>
+        <div className="blog-code-header">
+          <span className="blog-code-dots">
+            <span /><span /><span />
+          </span>
+          <span className="blog-code-lang">
+            {value.filename || LANG_LABELS[value.language] || value.language || 'Code'}
+          </span>
+        </div>
+        <SyntaxHighlighter
+          language={value.language || 'text'}
+          style={vscDarkPlus}
+          customStyle={{
+            margin: 0,
+            borderRadius: '0 0 10px 10px',
+            fontSize: '0.84rem',
+            lineHeight: '1.65',
+            padding: '1.2rem 1.4rem',
+          }}
+          showLineNumbers={value.code?.split('\n').length > 4}
+          lineNumberStyle={{ opacity: 0.35, userSelect: 'none', minWidth: '2.5em' }}
+        >
+          {value.code || ''}
+        </SyntaxHighlighter>
       </div>
     ),
   },
