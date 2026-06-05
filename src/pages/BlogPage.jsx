@@ -29,10 +29,10 @@ const LinkedInIcon = () => (
 const SITE = 'https://bluesidedigital.com';
 
 function shareUrl(platform, title, slug) {
-  const url  = encodeURIComponent(`${SITE}/#/blog/${slug}`);
+  const url  = encodeURIComponent(`${SITE}/blog/${slug}`);
   const text = encodeURIComponent(title);
   if (platform === 'x')        return `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-  if (platform === 'linkedin') return `https://www.linkedin.com/sharing/share-offsite/?url=${url}&title=${text}`;
+  if (platform === 'linkedin') return `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
 }
 
 function openShare(href) {

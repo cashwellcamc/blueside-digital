@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function LeftPanel() {
   return (
     <div className="left">
@@ -18,21 +20,17 @@ export default function LeftPanel() {
 
       <div className="contact-block">
         <div className="contact-label">Get in touch</div>
-        <a href="#/contact" className="cta-ghost">Let's Work Together →</a>
+        <Link to="/contact" className="cta-ghost">Let's Work Together →</Link>
       </div>
 
       <div className="contact-block" style={{ marginTop: '1.2rem' }}>
         <div className="contact-label">Writing</div>
-        <a className="contact-link" href="#/blog">
-          Articles &amp; Insights
-        </a>
+        <Link className="contact-link" to="/blog">Articles &amp; Insights</Link>
       </div>
 
       <div className="contact-block" style={{ marginTop: '0.8rem' }}>
         <div className="contact-label">Work</div>
-        <a className="contact-link" href="#/case-studies">
-          Case Studies
-        </a>
+        <Link className="contact-link" to="/case-studies">Case Studies</Link>
       </div>
 
       <div className="availability">

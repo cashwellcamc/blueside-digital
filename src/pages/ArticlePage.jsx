@@ -14,6 +14,12 @@ const LANG_LABELS = {
 
 const SITE = 'https://bluesidedigital.com';
 
+function setMeta(selector, attr, value) {
+  let el = document.querySelector(selector);
+  if (!el) { el = document.createElement('meta'); document.head.appendChild(el); }
+  el.setAttribute(attr, value);
+}
+
 const ptComponents = {
   block: {
     normal: ({ children }) => <p>{children}</p>,
@@ -76,10 +82,10 @@ const LinkedInIcon = () => (
 );
 
 function buildShareUrl(platform, title, slug) {
-  const url  = encodeURIComponent(`${SITE}/#/blog/${slug}`);
+  const url  = encodeURIComponent(`${SITE}/blog/${slug}`);
   const text = encodeURIComponent(title);
   if (platform === 'x')        return `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-  if (platform === 'linkedin') return `https://www.linkedin.com/sharing/share-offsite/?url=${url}&title=${text}`;
+  if (platform === 'linkedin') return `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
 }
 
 function openShare(href) {
@@ -98,10 +104,31 @@ export default function ArticlePage() {
   }, [slug]);
 
   useEffect(() => {
-    if (article?.title) {
-      document.title = `${article.title} | Blueside Digital`;
+    if (!article) return;
+
+    const url = `${SITE}/blog/${article.slug}`;
+    const title = `${article.title} | Blueside Digital`;
+
+    document.title = title;
+
+    setMeta('meta[property="og:title"]',       'content', title);
+    setMeta('meta[property="og:url"]',          'content', url);
+    setMeta('meta[property="og:type"]',         'content', 'article');
+    setMeta('meta[name="twitter:title"]',       'content', title);
+
+    if (article.mainImage) {
+      setMeta('meta[property="og:image"]',      'content', article.mainImage);
+      setMeta('meta[name="twitter:image"]',     'content', article.mainImage);
+      setMeta('meta[name="twitter:card"]',      'content', 'summary_large_image');
     }
-    return () => { document.title = 'Blueside Digital | WCAG & ADA Accessibility Consulting'; };
+
+    return () => {
+      document.title = 'Blueside Digital | WCAG & ADA Accessibility Consulting';
+      setMeta('meta[property="og:title"]', 'content', 'Blueside Digital | WCAG & ADA Accessibility Consulting');
+      setMeta('meta[property="og:url"]',   'content', `${SITE}/`);
+      setMeta('meta[property="og:type"]',  'content', 'website');
+      setMeta('meta[name="twitter:card"]', 'content', 'summary');
+    };
   }, [article]);
 
   return (

@@ -50,6 +50,14 @@
   }
   </script>
 
+  <!-- GitHub Pages SPA routing: restore path from redirect query param -->
+  <script>
+    (function() {
+      var p = window.location.search.match(/[?&]p=([^&]+)/);
+      if (p) window.history.replaceState(null, null, decodeURIComponent(p[1]) + window.location.hash);
+    })();
+  </script>
+
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
