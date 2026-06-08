@@ -60,10 +60,10 @@
 
 /* ─── MAIN CONTENT ───────────────────────────────────────────────────────── */
 .blog-main {
-  max-width: 860px;
+  max-width: 1100px;
   width: 100%;
   margin: 0 auto;
-  padding: 4rem 2rem 6rem;
+  padding: 4rem 2.5rem 6rem;
   display: flex;
   flex-direction: column;
   gap: 4rem;
@@ -118,7 +118,7 @@
 .blog-article-title {
   font-family: 'Playfair Display', serif;
   font-weight: 700;
-  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-size: clamp(1.6rem, 2.6vw, 2.3rem);
   color: var(--ink);
   letter-spacing: -0.01em;
   line-height: 1.2;
@@ -183,10 +183,10 @@
 
 /* ─── ARTICLE BODY ───────────────────────────────────────────────────────── */
 .blog-article-body {
-  font-size: 0.97rem;
+  font-size: 1.08rem;
   font-weight: 300;
   color: var(--ink-muted);
-  line-height: 1.85;
+  line-height: 1.9;
 }
 
 .blog-article-body p { margin-bottom: 1em; }
@@ -194,7 +194,7 @@
 
 .blog-article-body h3 {
   font-family: 'Playfair Display', serif;
-  font-size: 1.15rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: var(--ink);
   margin: 1.6em 0 0.5em;
@@ -334,8 +334,9 @@
 }
 
 .blog-excerpt {
+  font-size: 1.02rem;
   color: var(--ink-muted);
-  line-height: 1.75;
+  line-height: 1.8;
 }
 
 .blog-read-more {
@@ -365,6 +366,20 @@
   color: var(--blue-mid);
   letter-spacing: 0.02em;
   opacity: 0.8;
+}
+
+/* ─── VIEW COUNTER ───────────────────────────────────────────────────────── */
+.blog-view-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--ink-muted);
+  opacity: 0.55;
 }
 
 /* ─── BYLINE ─────────────────────────────────────────────────────────────── */
@@ -406,7 +421,12 @@
 .blog-byline-email:hover { border-color: var(--blue-mid); }
 
 /* ─── RESPONSIVE ─────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .blog-main { padding: 2.5rem 1.5rem 4rem; gap: 3rem; }
+}
+
 @media (max-width: 600px) {
   .blog-header { padding: 1.1rem 1.5rem; }
-  .blog-main   { padding: 2.5rem 1.5rem 4rem; gap: 3rem; }
+  .blog-main   { padding: 2rem 1.2rem 4rem; gap: 3rem; }
+  .blog-article-body { font-size: 1rem; }
 }

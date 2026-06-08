@@ -69,6 +69,12 @@ const ptComponents = {
   },
 };
 
+const EyeIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+  </svg>
+);
+
 const XIcon = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.735-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
@@ -96,12 +102,21 @@ export default function ArticlePage() {
   const { slug } = useParams();
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [views, setViews] = useState(null);
 
   useEffect(() => {
     client.fetch(ARTICLE_BY_SLUG_QUERY, { slug })
       .then(data => { setArticle(data); setLoading(false); })
       .catch(() => setLoading(false));
   }, [slug]);
+
+  useEffect(() => {
+    if (!article?.slug) return;
+    fetch(`https://api.counterapi.dev/v1/bluesidedigital/${article.slug}/up`)
+      .then(r => r.json())
+      .then(data => setViews(data.count ?? data.value ?? null))
+      .catch(() => {});
+  }, [article?.slug]);
 
   useEffect(() => {
     if (!article) return;
@@ -190,6 +205,13 @@ export default function ArticlePage() {
                 <p className="blog-tags">{article.tags.map(t => `#${t}`).join(' ')}</p>
               )}
             </div>
+
+            {views !== null && (
+              <div className="blog-view-count" aria-label={`${views} views`}>
+                <EyeIcon />
+                <span>{views.toLocaleString()} {views === 1 ? 'view' : 'views'}</span>
+              </div>
+            )}
 
             <div className="blog-byline">
               <div className="blog-byline-name">Cameron Cashwell</div>

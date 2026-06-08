@@ -22,8 +22,19 @@ const articles = await client.fetch(`
     title,
     "slug": slug.current,
     "mainImage": mainImage.asset->url,
+    body,
   }
 `);
+
+function bodyToDescription(body, max = 160) {
+  if (!body) return '';
+  const text = body
+    .filter(b => b._type === 'block' && b.children)
+    .map(b => b.children.map(c => c.text).join(''))
+    .join(' ')
+    .trim();
+  return text.length > max ? text.slice(0, max).trimEnd() + '…' : text;
+}
 
 const template = readFileSync(join(__dirname, '../dist/index.html'), 'utf8');
 
@@ -31,13 +42,17 @@ for (const article of articles) {
   const pageTitle = `${article.title} | Blueside Digital`;
   const pageUrl   = `${SITE}/blog/${article.slug}`;
   const img       = article.mainImage || '';
+  const desc      = bodyToDescription(article.body).replace(/"/g, '&quot;');
 
   let html = template
-    .replace(/(<title>)[^<]*(< \/title>|<\/title>)/, `$1${pageTitle}</title>`)
-    .replace(/(<meta property="og:title"[^>]*content=")[^"]*(")/,  `$1${pageTitle}$2`)
-    .replace(/(<meta property="og:url"[^>]*content=")[^"]*(")/,    `$1${pageUrl}$2`)
-    .replace(/(<meta property="og:type"[^>]*content=")[^"]*(")/,   `$1article$2`)
-    .replace(/(<meta name="twitter:title"[^>]*content=")[^"]*(")/,  `$1${pageTitle}$2`);
+    .replace(/(<title>)[^<]*(<\/title>)/, `$1${pageTitle}$2`)
+    .replace(/(<meta property="og:title"[^>]*content=")[^"]*(")/,       `$1${pageTitle}$2`)
+    .replace(/(<meta property="og:url"[^>]*content=")[^"]*(")/,         `$1${pageUrl}$2`)
+    .replace(/(<meta property="og:type"[^>]*content=")[^"]*(")/,        `$1article$2`)
+    .replace(/(<meta property="og:description"[^>]*content=")[^"]*(")/,  `$1${desc}$2`)
+    .replace(/(<meta name="twitter:title"[^>]*content=")[^"]*(")/,       `$1${pageTitle}$2`)
+    .replace(/(<meta name="twitter:description"[^>]*content=")[^"]*(")/,  `$1${desc}$2`)
+    .replace(/(<link rel="canonical"[^>]*href=")[^"]*(")/,               `$1${pageUrl}$2`);
 
   if (img) {
     // Inject og:image + twitter:image after og:type line
