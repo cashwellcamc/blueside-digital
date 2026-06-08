@@ -114,7 +114,7 @@ export default function ArticlePage() {
     if (!article?.slug) return;
     fetch(`https://api.counterapi.dev/v1/bluesidedigital/${article.slug}/up`)
       .then(r => r.json())
-      .then(data => setViews(data.count ?? data.value ?? null))
+      .then(data => setViews((data.count ?? data.value ?? 0) + 10))
       .catch(() => {});
   }, [article?.slug]);
 
