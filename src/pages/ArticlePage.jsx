@@ -30,7 +30,7 @@ const ptComponents = {
     em:     ({ children }) => <em>{children}</em>,
     code:   ({ children }) => <code className="blog-inline-code">{children}</code>,
     link:   ({ value, children }) => (
-      <a href={value.href} target={value.blank ? '_blank' : '_self'} rel="noreferrer">
+      <a href={value.href} target="_blank" rel="noreferrer noopener">
         {children}
       </a>
     ),
