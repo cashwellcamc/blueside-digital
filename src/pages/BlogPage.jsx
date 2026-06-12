@@ -101,7 +101,7 @@ export default function BlogPage() {
             <Link to={`/blog/${article.slug}`} className="blog-article-title-link">
               <h2 className="blog-article-title">{article.title}</h2>
             </Link>
-            <div className="blog-article-image">
+            <div className="blog-article-image blog-article-image--preview">
               {article.mainImage
                 ? <img src={article.mainImage} alt={article.title} />
                 : <Placeholder />

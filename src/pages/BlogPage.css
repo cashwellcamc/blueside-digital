@@ -42,20 +42,24 @@
 .blog-wordmark-main {
   font-family: 'Playfair Display', serif;
   font-weight: 700;
-  font-size: 1.3rem;
+  font-size: 1.55rem;
   color: var(--ink);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   line-height: 1;
 }
 
-.blog-wordmark-main span { color: var(--blue-light); }
+.blog-wordmark-main span {
+  color: var(--blue-light);
+  font-style: italic;
+}
 
 .blog-wordmark-sub {
-  font-size: 0.62rem;
-  font-weight: 400;
-  letter-spacing: 0.20em;
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--ink-muted);
+  color: var(--blue-mid);
+  opacity: 0.65;
 }
 
 /* ─── MAIN CONTENT ───────────────────────────────────────────────────────── */
@@ -66,7 +70,7 @@
   padding: 4rem 2.5rem 6rem;
   display: flex;
   flex-direction: column;
-  gap: 4rem;
+  gap: 3rem;
 }
 
 /* ─── LOADING / EMPTY ────────────────────────────────────────────────────── */
@@ -82,28 +86,34 @@
 /* ─── ARTICLE ────────────────────────────────────────────────────────────── */
 .blog-article {
   border-top: 2px solid var(--blue-light);
-  padding-top: 2rem;
+  padding-top: 1.8rem;
 }
 
 .blog-article-meta {
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.7rem;
+  align-items: baseline;
+  gap: 0.9rem;
+  margin-bottom: 0.65rem;
 }
 
 .blog-article-num {
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  font-style: italic;
   color: var(--blue-light);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  opacity: 0.75;
 }
 
 .blog-article-date {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
+  font-weight: 500;
   color: var(--ink-muted);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
 }
 
 .blog-article-title-link {
@@ -140,6 +150,10 @@
   display: block;
 }
 
+.blog-article-image--preview img {
+  height: 150px;
+}
+
 .blog-article-image-placeholder {
   width: 100%;
   height: 260px;
@@ -149,6 +163,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.blog-article-image--preview .blog-article-image-placeholder {
+  height: 150px;
 }
 
 .blog-placeholder-grid {
@@ -184,7 +202,7 @@
 /* ─── ARTICLE BODY ───────────────────────────────────────────────────────── */
 .blog-article-body {
   font-size: 1.08rem;
-  font-weight: 300;
+  font-weight: 400;
   color: var(--ink-muted);
   line-height: 1.9;
 }
@@ -335,6 +353,7 @@
 
 .blog-excerpt {
   font-size: 1.02rem;
+  font-weight: 400;
   color: var(--ink-muted);
   line-height: 1.8;
 }
