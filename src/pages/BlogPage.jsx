@@ -63,7 +63,7 @@ export default function BlogPage() {
           <div className="blog-empty">No published articles yet.</div>
         )}
 
-        {articles.map((article) => (
+        {articles.map((article, idx) => (
           <article key={article._id} className="blog-article">
             <div className="blog-article-meta">
               {article.publishedAt && (
@@ -75,7 +75,7 @@ export default function BlogPage() {
             <Link to={`/blog/${article.slug}`} className="blog-article-title-link">
               <h2 className="blog-article-title">{article.title}</h2>
             </Link>
-            <div className="blog-article-image blog-article-image--preview">
+            <div className="blog-article-image blog-article-image--preview" style={{ '--pan-delay': `${idx * 0.12}s` }}>
               {article.mainImage
                 ? <img src={article.mainImage} alt={article.title} />
                 : <Placeholder />
