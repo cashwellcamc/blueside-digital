@@ -176,6 +176,12 @@ export default function ArticlePage() {
 
             <h1 className="blog-article-title">{article.title}</h1>
 
+            {article.mainImage && (
+              <div className="blog-article-image">
+                <img src={article.mainImage} alt={article.title} />
+              </div>
+            )}
+
             <div className="blog-share">
               <span className="blog-share-label">Share</span>
               <button
@@ -193,12 +199,6 @@ export default function ArticlePage() {
                 <LinkedInIcon /> LinkedIn
               </button>
             </div>
-
-            {article.mainImage && (
-              <div className="blog-article-image">
-                <img src={article.mainImage} alt={article.title} />
-              </div>
-            )}
 
             <div className="blog-article-body">
               {article.body && <PortableText value={article.body} components={ptComponents} />}
