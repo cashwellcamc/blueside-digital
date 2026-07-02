@@ -50,7 +50,6 @@
 
 .blog-wordmark-main span {
   color: var(--blue-light);
-  font-style: italic;
 }
 
 .blog-wordmark-sub {
@@ -137,10 +136,39 @@
 
 /* ─── ARTICLE IMAGE ──────────────────────────────────────────────────────── */
 .blog-article-image {
+  position: relative;
   width: 100%;
   margin-bottom: 1.8rem;
   border-radius: 6px;
   overflow: hidden;
+}
+
+.blog-article-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #1A6CC4;
+  mix-blend-mode: color;
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.blog-article-image::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background-color: #0D3D6B;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.18) 1.5px, transparent 1.5px);
+  background-size: 18px 18px;
+}
+
+.blog-article-image:hover::before {
+  opacity: 1;
 }
 
 .blog-article-image img {

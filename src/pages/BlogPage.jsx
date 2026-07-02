@@ -88,10 +88,9 @@ export default function BlogPage() {
           <div className="blog-empty">No published articles yet.</div>
         )}
 
-        {articles.map((article, idx) => (
+        {articles.map((article) => (
           <article key={article._id} className="blog-article">
             <div className="blog-article-meta">
-              <span className="blog-article-num">{String(idx + 1).padStart(2, '0')}</span>
               {article.publishedAt && (
                 <span className="blog-article-date">
                   {new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
