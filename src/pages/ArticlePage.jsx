@@ -6,6 +6,7 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { client, ARTICLE_BY_SLUG_QUERY } from '../lib/sanity.js';
 import './BlogPage.css';
 
+
 const LANG_LABELS = {
   javascript: 'JavaScript', typescript: 'TypeScript', jsx: 'JSX', tsx: 'TSX',
   html: 'HTML', css: 'CSS', scss: 'SCSS', json: 'JSON',
@@ -214,15 +215,15 @@ export default function ArticlePage() {
             )}
 
             <div className="blog-byline">
-              <div className="blog-byline-name">Cameron Cashwell</div>
-              <p className="blog-byline-bio">
-                Blueside Digital is an independent consulting practice specializing in web accessibility,
-                WCAG 2.1 AA audits, Section 504/508 compliance, and full-stack digital work for healthcare,
-                pharma, and federal organizations. 13+ years of senior-level experience.
-              </p>
-              <a className="blog-byline-email" href="mailto:cashwell.digital@gmail.com">
-                cashwell.digital@gmail.com
-              </a>
+              <div className="blog-byline-content">
+                <div className="blog-byline-name">Cameron Cashwell</div>
+                <p className="blog-byline-bio">
+                  Blueside Digital is an independent consulting practice specializing in web accessibility,
+                  WCAG 2.1 AA audits, Section 504/508 compliance, and full-stack digital work for healthcare,
+                  pharma, and federal organizations. 13+ years of senior-level experience.
+                </p>
+              </div>
+              <a className="blog-byline-cta" href="/contact">Get in touch →</a>
             </div>
           </article>
         )}
