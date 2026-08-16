@@ -1,5 +1,33 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ─── SKIP LINK ─────────────────────────────── */
+.skip-link {
+  position: fixed;
+  top: -50px;
+  left: 0;
+  padding: 0.6rem 1.2rem;
+  background: var(--blue);
+  color: var(--white);
+  font-size: 0.875rem;
+  font-weight: 600;
+  z-index: 9999;
+  text-decoration: none;
+  border-radius: 0 0 4px 0;
+  transition: top 0.15s;
+}
+.skip-link:focus { top: 0; }
+
+/* ─── FOCUS VISIBLE ─────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--blue-light);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.right :focus-visible,
+.contact-right :focus-visible {
+  outline-color: var(--white);
+}
+
 :root {
   --blue:       #0D3D6B;
   --blue-mid:   #1A5A9A;
@@ -132,6 +160,7 @@ html, body {
 }
 
 .contact-link:hover { border-color: var(--blue-mid); }
+.contact-link--disabled { opacity: 0.38; cursor: default; pointer-events: none; }
 
 /* ─── AVAILABILITY ──────────────────────── */
 .availability {
@@ -178,7 +207,7 @@ html, body {
   font-size: 0.63rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: #A8D4F5;
   margin-bottom: 0.7rem;
 }
 
@@ -283,7 +312,7 @@ html, body {
 /* ─── SERVICES GRID ─────────────────────── */
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 1px;
   background: rgba(255, 255, 255, 0.09);
   border: 1px solid rgba(255, 255, 255, 0.11);
@@ -292,6 +321,7 @@ html, body {
 }
 
 .service-card {
+  grid-column: span 2;
   padding: 1.1rem 1.2rem;
   background: rgba(255, 255, 255, 0.03);
   transition: background 0.18s;
@@ -338,7 +368,7 @@ html, body {
 }
 
 .service-card.featured {
-  grid-column: 1 / -1;
+  grid-column: span 3;
   display: flex;
   align-items: center;
   gap: 1.2rem;
@@ -374,10 +404,7 @@ html, body {
   letter-spacing: 0.04em;
   text-decoration: none;
   transition: opacity 0.18s, transform 0.12s;
-  opacity: 0;
 }
-
-.shell.ready .cta-ghost { animation: fadeUp 0.55s ease 0.82s forwards; }
 
 .cta-ghost:hover { opacity: 0.85; transform: translateY(-1px); }
 .cta-ghost:active { transform: translateY(0); }
@@ -387,10 +414,7 @@ html, body {
   margin-top: 1.8rem;
   border-top: 1px solid rgba(255, 255, 255, 0.10);
   padding-top: 1.6rem;
-  opacity: 0;
 }
-
-.shell.ready .cta-strip { animation: fadeUp 0.55s ease 1.0s forwards; }
 
 .cta-strip-btn {
   display: block;
@@ -411,118 +435,6 @@ html, body {
 .cta-strip-btn:hover { opacity: 0.88; transform: translateY(-1px); }
 .cta-strip-btn:active { transform: translateY(0); }
 
-/* ─── REVEAL ANIMATIONS ─────────────────────────────────── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* Hidden until intro completes */
-.divider,
-.tagline,
-.contact-block,
-.availability,
-.eyebrow,
-.right-heading,
-.tech-section,
-.services-grid {
-  opacity: 0;
-}
-
-/* Staggered left panel reveal */
-.shell.ready .divider              { animation: fadeUp 0.55s ease 0.05s forwards; }
-.shell.ready .tagline              { animation: fadeUp 0.55s ease 0.22s forwards; }
-.shell.ready .left > :nth-child(4) { animation: fadeUp 0.55s ease 0.38s forwards; }
-.shell.ready .left > :nth-child(5) { animation: fadeUp 0.55s ease 0.50s forwards; }
-.shell.ready .left > :nth-child(6) { animation: fadeUp 0.55s ease 0.60s forwards; }
-.shell.ready .availability         { animation: fadeUp 0.55s ease 0.70s forwards; }
-
-/* Staggered right panel reveal */
-.shell.ready .eyebrow            { animation: fadeUp 0.55s ease 0.30s forwards; }
-.shell.ready .right-heading      { animation: fadeUp 0.55s ease 0.48s forwards; }
-.shell.ready .tech-section       { animation: fadeUp 0.55s ease 0.66s forwards; }
-.shell.ready .services-grid      { animation: fadeUp 0.55s ease 0.86s forwards; }
-
-/* ─── INTRO ──────────────────────────────── */
-
-/*
-  White panel: anchored left: 0, width transitions 100% → 36%.
-  Blue panel:  anchored right: 0, width 64%, slides in via translateX.
-  At every frame: white right-edge = blue left-edge (same easing, same duration).
-  Result: a true physical push — no gaps, no fades between the two panels.
-*/
-
-.intro-white {
-  position: fixed;
-  top: 0; left: 0; bottom: 0;
-  width: 100%;           /* squeezes to 36% on push */
-  z-index: 500;
-  background: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  pointer-events: none;
-  transition:
-    width   0.95s cubic-bezier(0.76, 0, 0.24, 1),
-    opacity 0.38s ease;
-}
-
-/* Squeeze left as blue slides in */
-.intro-white.intro-push,
-.intro-white.intro-exit { width: 36%; }
-
-.intro-white.intro-exit { opacity: 0; }
-
-/* Blue panel — slides in from right, always flush with white's right edge */
-.intro-blue {
-  position: fixed;
-  top: 0; right: 0; bottom: 0;
-  width: 64%;
-  z-index: 499;          /* just behind white (they're never overlapping) */
-  background: var(--blue);
-  pointer-events: none;
-  transform: translateX(100%);
-  transition:
-    transform 0.95s cubic-bezier(0.76, 0, 0.24, 1),
-    opacity   0.38s ease;
-}
-
-.intro-blue.intro-push,
-.intro-blue.intro-exit { transform: translateX(0); }
-
-.intro-blue.intro-exit  { opacity: 0; }
-
-/* Centered logo — font larger than final left-panel size for full-screen impact */
-.intro-logo { text-align: center; }
-
-.intro-logo .wordmark-main {
-  font-size: 4rem;
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.55s ease 0.12s, transform 0.55s ease 0.12s;
-}
-
-.intro-logo .wordmark-sub {
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 0.50s ease 0.28s, transform 0.50s ease 0.28s;
-}
-
-.intro-white.intro-enter .intro-logo .wordmark-main,
-.intro-white.intro-push  .intro-logo .wordmark-main,
-.intro-white.intro-enter .intro-logo .wordmark-sub,
-.intro-white.intro-push  .intro-logo .wordmark-sub {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Mobile: skip the push, just fade both out */
-@media (max-width: 940px) {
-  .intro-white.intro-push,
-  .intro-white.intro-exit { width: 100%; }
-  .intro-blue { display: none; }
-}
 
 /* ─── RESPONSIVE ────────────────────────── */
 @media (max-width: 940px) {
@@ -530,7 +442,15 @@ html, body {
   .left          { flex: none; padding: 3rem 2rem 2.5rem; }
   .left::after   { display: none; }
   .right         { padding: 3rem 2rem 4rem; }
-  .services-grid { grid-template-columns: repeat(2, 1fr); }
+  .services-grid { grid-template-columns: repeat(4, 1fr); }
+  .service-card          { grid-column: span 2; }
+  .service-card.featured {
+    grid-column: span 2;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .service-card.featured .service-icon { margin-bottom: 0.2rem; }
   .tagline       { max-width: 100%; }
   .wave-bg       { display: none; }
 }
@@ -542,11 +462,15 @@ html, body {
   .tech-item i          { font-size: 1.6rem; }
   .tech-item svg        { width: 1.6rem; height: 1.6rem; }
   .tech-marquee-track   { gap: 1.4rem; }
-  .services-grid { grid-template-columns: repeat(2, 1fr); }
+  .services-grid { grid-template-columns: repeat(4, 1fr); }
+  .service-card          { grid-column: span 2; }
+  .service-card.featured { grid-column: span 2; }
 }
 
 @media (max-width: 380px) {
   .services-grid { grid-template-columns: 1fr; }
+  .service-card          { grid-column: span 1; }
+  .service-card.featured { grid-column: span 1; }
   .tech-marquee-track   { gap: 1rem; }
   .tech-item i          { font-size: 1.5rem; }
   .tech-item svg        { width: 1.5rem; height: 1.5rem; }

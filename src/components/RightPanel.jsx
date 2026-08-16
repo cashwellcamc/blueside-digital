@@ -87,11 +87,17 @@ const SERVICES = [
     desc: 'HIPAA-aligned development practices, secure coding standards, and vulnerability awareness for regulated digital environments.',
     featured: true,
   },
+  {
+    icon: '◎',
+    title: 'AI & Governance',
+    desc: 'Governance frameworks, prompt engineering, and auditing AI systems for bias, compliance, and responsible deployment in regulated environments.',
+    featured: true,
+  },
 ];
 
 export default function RightPanel() {
   return (
-    <div className="right">
+    <main className="right" id="main-content">
       <svg className="wave-bg" width="520" height="420" viewBox="0 0 520 420" fill="none" aria-hidden="true">
         <path d="M-40 200 Q 60 100 160 200 Q 260 300 360 200 Q 460 100 560 200" stroke="white" strokeWidth="2" fill="none" />
         <path d="M-40 240 Q 60 140 160 240 Q 260 340 360 240 Q 460 140 560 240" stroke="white" strokeWidth="2" fill="none" />
@@ -118,7 +124,7 @@ export default function RightPanel() {
                 >
                   {[...items, ...items, ...items, ...items].map(({ name, cls, icon }, i) => (
                     <div key={i} className="tech-item">
-                      {icon ?? <i className={cls} />}
+                      {icon ?? <i className={cls} aria-hidden="true" />}
                       <span>{name}</span>
                     </div>
                   ))}
@@ -143,9 +149,11 @@ export default function RightPanel() {
         </div>
 
         <div className="cta-strip">
-          <a href="/contact" className="cta-strip-btn">Let's Work Together →</a>
+          <a href="/contact" className="cta-strip-btn">
+            Let's Work Together <span aria-hidden="true">→</span>
+          </a>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

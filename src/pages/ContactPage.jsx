@@ -138,6 +138,7 @@ export default function ContactPage() {
                     type="button"
                     className={`cf-toggle${discipline === d ? ' active' : ''}`}
                     onClick={() => handleDiscipline(d)}
+                    aria-pressed={discipline === d}
                   >
                     {d}
                   </button>
@@ -156,6 +157,7 @@ export default function ContactPage() {
                       type="button"
                       className={`cf-chip${technologies.includes(t) ? ' active' : ''}`}
                       onClick={() => toggleChip(technologies, setTech, t)}
+                      aria-pressed={technologies.includes(t)}
                     >
                       {t}
                     </button>
@@ -174,6 +176,7 @@ export default function ContactPage() {
                     type="button"
                     className={`cf-chip${workTypes.includes(w) ? ' active' : ''}`}
                     onClick={() => toggleChip(workTypes, setWorkTypes, w)}
+                    aria-pressed={workTypes.includes(w)}
                   >
                     {w}
                   </button>
@@ -187,9 +190,10 @@ export default function ContactPage() {
                 <div className="cf-field">
                   <label htmlFor="cf-name">Name <span aria-hidden="true">*</span></label>
                   <input
-                    id="cf-name" type="text" required
+                    id="cf-name" type="text" required aria-required="true"
                     value={name} onChange={e => setName(e.target.value)}
                     placeholder="Jane Smith"
+                    autoComplete="name"
                   />
                 </div>
                 <div className="cf-field">
@@ -204,9 +208,10 @@ export default function ContactPage() {
               <div className="cf-field">
                 <label htmlFor="cf-email">Email <span aria-hidden="true">*</span></label>
                 <input
-                  id="cf-email" type="email" required
+                  id="cf-email" type="email" required aria-required="true"
                   value={email} onChange={e => setEmail(e.target.value)}
                   placeholder="jane@acmehealth.com"
+                  autoComplete="email"
                 />
               </div>
               <div className="cf-field">
@@ -222,7 +227,7 @@ export default function ContactPage() {
             </div>
 
             {error && (
-              <p className="cf-error">Something went wrong. Please try again or email directly.</p>
+              <p className="cf-error" role="alert">Something went wrong. Please try again or email directly.</p>
             )}
 
             <button type="submit" className="cf-submit" disabled={submitting}>

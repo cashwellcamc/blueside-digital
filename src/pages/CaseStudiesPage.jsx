@@ -27,8 +27,8 @@ export default function CaseStudiesPage() {
       <header className="blog-header">
         <Link to="/" className="blog-back">&#8592; Back</Link>
         <div className="blog-wordmark">
-          <span className="blog-wordmark-main">Blue<span>side</span> Digital</span>
-          <span className="blog-wordmark-sub">Case Studies</span>
+          <span className="blog-wordmark-main" aria-hidden="true">Blue<span>side</span> Digital</span>
+          <h1 className="blog-wordmark-sub">Case Studies</h1>
         </div>
       </header>
 
@@ -51,13 +51,13 @@ export default function CaseStudiesPage() {
 
             <div className="cs-actions">
               {pdf && (
-                <a className="cs-download cs-download--pdf" href={pdf} target="_blank" rel="noreferrer">
-                  <span className="cs-download-icon">&#128196;</span>
+                <a className="cs-download cs-download--pdf" href={pdf} target="_blank" rel="noopener noreferrer" aria-label={`View PDF: ${title} (opens in new tab)`}>
+                  <span aria-hidden="true">&#128196;</span>
                   View PDF
                 </a>
               )}
-              <a className="cs-download cs-download--doc" href={file} download>
-                <span className="cs-download-icon">&#8659;</span>
+              <a className="cs-download cs-download--doc" href={file} download aria-label={`${fileLabel}: ${title}`}>
+                <span aria-hidden="true">&#8659;</span>
                 {fileLabel}
               </a>
             </div>

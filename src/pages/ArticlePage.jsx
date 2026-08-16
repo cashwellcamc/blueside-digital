@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { PortableText } from '@portabletext/react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { client, ARTICLE_BY_SLUG_QUERY } from '../lib/sanity.js';
+import { client, writeClient, ARTICLE_BY_SLUG_QUERY } from '../lib/sanity.js';
 import './BlogPage.css';
 
 
@@ -25,6 +25,14 @@ const ptComponents = {
   block: {
     normal: ({ children }) => <p>{children}</p>,
     h3:     ({ children }) => <h3>{children}</h3>,
+  },
+  list: {
+    bullet: ({ children }) => <ul className="blog-list blog-list--bullet">{children}</ul>,
+    number: ({ children }) => <ol className="blog-list blog-list--number">{children}</ol>,
+  },
+  listItem: {
+    bullet: ({ children }) => <li className="blog-list-item">{children}</li>,
+    number: ({ children }) => <li className="blog-list-item">{children}</li>,
   },
   marks: {
     strong: ({ children }) => <strong>{children}</strong>,
@@ -70,12 +78,6 @@ const ptComponents = {
   },
 };
 
-const EyeIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-    <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-  </svg>
-);
-
 const XIcon = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.735-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
@@ -103,47 +105,54 @@ export default function ArticlePage() {
   const { slug } = useParams();
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [views, setViews] = useState(null);
-
   useEffect(() => {
     client.fetch(ARTICLE_BY_SLUG_QUERY, { slug })
-      .then(data => { setArticle(data); setLoading(false); })
+      .then(data => {
+        setArticle(data);
+        setLoading(false);
+        if (writeClient && data?._id) {
+          writeClient.patch(data._id).setIfMissing({ viewCount: 0 }).inc({ viewCount: 1 }).commit().catch(() => {});
+        }
+      })
       .catch(() => setLoading(false));
   }, [slug]);
 
   useEffect(() => {
-    if (!article?.slug) return;
-    fetch(`https://api.counterapi.dev/v1/bluesidedigital/${article.slug}/up`)
-      .then(r => r.json())
-      .then(data => setViews((data.count ?? data.value ?? 0) + 10))
-      .catch(() => {});
-  }, [article?.slug]);
-
-  useEffect(() => {
     if (!article) return;
 
-    const url = `${SITE}/blog/${article.slug}`;
+    const url   = `${SITE}/blog/${article.slug}`;
     const title = `${article.title} | Blueside Digital`;
+    const desc  = article.body
+      ? article.body.filter(b => b._type === 'block' && b.children)
+          .map(b => b.children.map(c => c.text).join('')).join(' ').trim().slice(0, 160)
+      : '';
 
     document.title = title;
 
-    setMeta('meta[property="og:title"]',       'content', title);
-    setMeta('meta[property="og:url"]',          'content', url);
-    setMeta('meta[property="og:type"]',         'content', 'article');
-    setMeta('meta[name="twitter:title"]',       'content', title);
-
+    setMeta('meta[name="description"]',          'content', desc);
+    setMeta('meta[property="og:title"]',         'content', title);
+    setMeta('meta[property="og:description"]',   'content', desc);
+    setMeta('meta[property="og:url"]',           'content', url);
+    setMeta('meta[property="og:type"]',          'content', 'article');
+    setMeta('meta[name="twitter:title"]',        'content', title);
+    setMeta('meta[name="twitter:description"]',  'content', desc);
+    if (article.publishedAt) {
+      setMeta('meta[property="article:published_time"]', 'content', article.publishedAt);
+    }
     if (article.mainImage) {
-      setMeta('meta[property="og:image"]',      'content', article.mainImage);
-      setMeta('meta[name="twitter:image"]',     'content', article.mainImage);
-      setMeta('meta[name="twitter:card"]',      'content', 'summary_large_image');
+      setMeta('meta[property="og:image"]',       'content', article.mainImage);
+      setMeta('meta[name="twitter:image"]',      'content', article.mainImage);
+      setMeta('meta[name="twitter:card"]',       'content', 'summary_large_image');
     }
 
     return () => {
       document.title = 'Blueside Digital | WCAG & ADA Accessibility Consulting';
-      setMeta('meta[property="og:title"]', 'content', 'Blueside Digital | WCAG & ADA Accessibility Consulting');
-      setMeta('meta[property="og:url"]',   'content', `${SITE}/`);
-      setMeta('meta[property="og:type"]',  'content', 'website');
-      setMeta('meta[name="twitter:card"]', 'content', 'summary');
+      setMeta('meta[name="description"]',          'content', 'Senior-level digital consulting specializing in WCAG 2.1 AA audits, Section 504/508 compliance, and ADA accessibility for healthcare organizations.');
+      setMeta('meta[property="og:title"]',         'content', 'Blueside Digital | WCAG & ADA Accessibility Consulting');
+      setMeta('meta[property="og:description"]',   'content', 'Senior-level digital consulting specializing in WCAG 2.1 AA audits, Section 504/508 compliance, and ADA accessibility for healthcare organizations.');
+      setMeta('meta[property="og:url"]',           'content', `${SITE}/`);
+      setMeta('meta[property="og:type"]',          'content', 'website');
+      setMeta('meta[name="twitter:card"]',         'content', 'summary');
     };
   }, [article]);
 
@@ -157,73 +166,78 @@ export default function ArticlePage() {
         </div>
       </header>
 
-      <main className="blog-main">
-        {loading && <div className="blog-loading">Loading…</div>}
+      <main className="blog-main blog-main--article">
+        {loading && <div className="blog-loading" aria-live="polite">Loading…</div>}
 
         {!loading && !article && (
-          <div className="blog-empty">Article not found. <Link to="/blog">← Back to articles</Link></div>
+          <div className="blog-empty" role="alert">Article not found. <Link to="/blog">← Back to articles</Link></div>
         )}
 
         {article && (
-          <article className="blog-article">
+          <article className="blog-article" aria-labelledby="article-title">
             <div className="blog-article-meta">
               {article.publishedAt && (
-                <span className="blog-article-date">
+                <time className="blog-article-date" dateTime={article.publishedAt}>
                   {new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                </time>
+              )}
+            </div>
+
+            <div className="article-chrome">
+              <div className="article-chrome-header" aria-hidden="true">
+                <span className="blog-code-dots">
+                  <span /><span /><span />
                 </span>
-              )}
-            </div>
-
-            <h1 className="blog-article-title">{article.title}</h1>
-
-            {article.mainImage && (
-              <div className="blog-article-image">
-                <img src={article.mainImage} alt={article.title} />
+                <span className="article-chrome-tab">{article.slug}.md</span>
               </div>
-            )}
+              <div className="article-chrome-body">
+                <h1 id="article-title" className="blog-article-title">{article.title}</h1>
 
-            <div className="blog-share">
-              <span className="blog-share-label">Share</span>
-              <button
-                className="blog-share-btn blog-share-btn--x"
-                onClick={() => openShare(buildShareUrl('x', article.title, article.slug))}
-                aria-label="Share on X (Twitter)"
-              >
-                <XIcon /> X
-              </button>
-              <button
-                className="blog-share-btn blog-share-btn--li"
-                onClick={() => openShare(buildShareUrl('linkedin', article.title, article.slug))}
-                aria-label="Share on LinkedIn"
-              >
-                <LinkedInIcon /> LinkedIn
-              </button>
-            </div>
+                {article.mainImage && (
+                  <div className="blog-article-image">
+                    <img src={article.mainImage} alt={article.title} />
+                  </div>
+                )}
 
-            <div className="blog-article-body">
-              {article.body && <PortableText value={article.body} components={ptComponents} />}
-              {article.tags?.length > 0 && (
-                <p className="blog-tags">{article.tags.map(t => `#${t}`).join(' ')}</p>
-              )}
-            </div>
+                <div className="blog-share" role="group" aria-label="Share this article">
+                  <span className="blog-share-label" aria-hidden="true">Share</span>
+                  <button
+                    type="button"
+                    className="blog-share-btn blog-share-btn--x"
+                    onClick={() => openShare(buildShareUrl('x', article.title, article.slug))}
+                    aria-label="Share on X (Twitter)"
+                  >
+                    <XIcon /> X
+                  </button>
+                  <button
+                    type="button"
+                    className="blog-share-btn blog-share-btn--li"
+                    onClick={() => openShare(buildShareUrl('linkedin', article.title, article.slug))}
+                    aria-label="Share on LinkedIn"
+                  >
+                    <LinkedInIcon /> LinkedIn
+                  </button>
+                </div>
 
-            {views !== null && (
-              <div className="blog-view-count" aria-label={`${views} views`}>
-                <EyeIcon />
-                <span>{views.toLocaleString()} {views === 1 ? 'view' : 'views'}</span>
+                <div className="blog-article-body">
+                  {article.body && <PortableText value={article.body} components={ptComponents} />}
+                  {article.tags?.length > 0 && (
+                    <p className="blog-tags">{article.tags.map(t => `#${t}`).join(' ')}</p>
+                  )}
+                </div>
+
+                <div className="blog-byline">
+                  <div className="blog-byline-content">
+                    <div className="blog-byline-name">Cameron Cashwell</div>
+                    <p className="blog-byline-bio">
+                      Blueside Digital is an independent consulting practice specializing in web accessibility,
+                      WCAG 2.1 AA audits, Section 504/508 compliance, and full-stack digital work for healthcare,
+                      pharma, and federal organizations. 13+ years of senior-level experience.
+                    </p>
+                  </div>
+                  <Link className="blog-byline-cta" to="/contact">Get in touch <span aria-hidden="true">→</span></Link>
+                </div>
               </div>
-            )}
-
-            <div className="blog-byline">
-              <div className="blog-byline-content">
-                <div className="blog-byline-name">Cameron Cashwell</div>
-                <p className="blog-byline-bio">
-                  Blueside Digital is an independent consulting practice specializing in web accessibility,
-                  WCAG 2.1 AA audits, Section 504/508 compliance, and full-stack digital work for healthcare,
-                  pharma, and federal organizations. 13+ years of senior-level experience.
-                </p>
-              </div>
-              <a className="blog-byline-cta" href="/contact">Get in touch →</a>
             </div>
           </article>
         )}

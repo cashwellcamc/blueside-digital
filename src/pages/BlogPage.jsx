@@ -14,24 +14,10 @@ function getExcerpt(body, maxChars = 220) {
   return text.length > maxChars ? text.slice(0, maxChars).trimEnd() + '…' : text;
 }
 
-/* ─── FALLBACK PLACEHOLDER ───────────────────────────────────────────────── */
-const Placeholder = () => (
-  <div className="blog-article-image-placeholder" aria-hidden="true">
-    <div className="blog-placeholder-grid">
-      {Array.from({ length: 24 }, (_, i) => (
-        <span key={i} className="blog-placeholder-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/>
-          </svg>
-        </span>
-      ))}
-    </div>
-  </div>
-);
-
 export default function BlogPage() {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sort, setSort] = useState('date');
 
   useEffect(() => {
     document.title = 'Articles & Insights | Blueside Digital';
@@ -44,17 +30,41 @@ export default function BlogPage() {
       .catch(() => setLoading(false));
   }, []);
 
+  const sorted = [...articles].sort((a, b) => {
+    if (sort === 'most') return (b.viewCount || 0) - (a.viewCount || 0);
+    if (sort === 'least') return (a.viewCount || 0) - (b.viewCount || 0);
+    return new Date(b.publishedAt) - new Date(a.publishedAt);
+  });
+
   return (
     <div className="blog-shell">
       <header className="blog-header">
         <Link to="/" className="blog-back">&#8592; Back</Link>
         <div className="blog-wordmark">
-          <span className="blog-wordmark-main">Blue<span>side</span> Digital</span>
-          <span className="blog-wordmark-sub">Articles &amp; Insights</span>
+          <span className="blog-wordmark-main" aria-hidden="true">Blue<span>side</span> Digital</span>
+          <h1 className="blog-wordmark-sub">Articles &amp; Insights</h1>
         </div>
       </header>
 
       <main className="blog-main">
+        <div className="blog-filter-bar" role="group" aria-label="Sort articles">
+          <span className="blog-filter-label">Sort:</span>
+          {[
+            { key: 'date', label: 'Latest' },
+            { key: 'most', label: 'Most Viewed' },
+          ].map(({ key, label }) => (
+            <button
+              key={key}
+              type="button"
+              className={`blog-filter-btn${sort === key ? ' active' : ''}`}
+              onClick={() => setSort(key)}
+              aria-pressed={sort === key}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
         {loading && (
           <div className="blog-loading">Loading articles&hellip;</div>
         )}
@@ -63,24 +73,22 @@ export default function BlogPage() {
           <div className="blog-empty">No published articles yet.</div>
         )}
 
-        {articles.map((article, idx) => (
-          <article key={article._id} className="blog-article">
+        {sorted.map((article) => (
+          <article key={article._id} className="blog-article" aria-labelledby={`title-${article._id}`}>
             <div className="blog-article-meta">
               {article.publishedAt && (
-                <span className="blog-article-date">
+                <time className="blog-article-date" dateTime={article.publishedAt}>
                   {new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-                </span>
+                </time>
+              )}
+              {article.viewCount > 0 && (
+                <span className="blog-article-views">{article.viewCount + 100} views</span>
               )}
             </div>
             <Link to={`/blog/${article.slug}`} className="blog-article-title-link">
-              <h2 className="blog-article-title">{article.title}</h2>
+              <h2 id={`title-${article._id}`} className="blog-article-title">{article.title}</h2>
             </Link>
-            <div className="blog-article-image blog-article-image--preview" style={{ '--pan-delay': `${idx * 0.12}s` }}>
-              {article.mainImage
-                ? <img src={article.mainImage} alt={article.title} />
-                : <Placeholder />
-              }
-            </div>
+            <div className="blog-article-bar" aria-hidden="true" />
             <div className="blog-article-body">
               <p className="blog-excerpt">{getExcerpt(article.body)}</p>
               <Link to={`/blog/${article.slug}`} className="blog-read-more">

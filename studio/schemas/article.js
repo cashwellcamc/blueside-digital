@@ -93,6 +93,13 @@ export const article = defineType({
       options: { layout: 'tags' },
     }),
     defineField({
+      name: 'viewCount',
+      title: 'View Count',
+      type: 'number',
+      initialValue: 0,
+      readOnly: true,
+    }),
+    defineField({
       name: 'status',
       title: 'Status',
       type: 'string',
