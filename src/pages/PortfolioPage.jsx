@@ -6,21 +6,21 @@ const PORTFOLIO_ITEMS = [
   {
     id: 1,
     title: 'Traceable Clinical Summary',
-    tags: ['React', 'WCAG 2.1 AA', 'Healthcare', 'AI / LLM', 'Accessibility', 'GitHub Actions'],
-    thumb: 'https://raw.githubusercontent.com/cashwellcamc/traceable-clinical-summary/main/docs/screenshot.png',
+    tags: ['React', 'TypeScript', 'Vercel', 'Google Gemini', 'WCAG 2.1 AA', 'Playwright', 'Vitest', 'GitHub Actions', 'Healthcare'],
+    thumb: 'https://raw.githubusercontent.com/cashwellcamc/traceable-clinical-summary/main/docs/screenshot.png?v=2',
     thumbAlt: 'Traceable Clinical Summary — interactive citation UI for AI-generated clinical summaries',
     sections: [
       {
         label: 'What It Is',
-        body: 'A front-end prototype demonstrating a UI pattern for displaying AI-generated clinical summaries in healthcare settings. The core design problem it addresses is trust: when an AI model synthesizes a patient\'s medical history, clinicians need to be able to verify every claim against its source before acting on it. The app shows a summary paragraph where each factual statement carries an inline citation that, when clicked, expands the exact source document excerpt that supports it — progress notes, discharge summaries, echocardiography reports, medication reconciliations. A clinician can read the AI output and trace every sentence back to the record it came from, then formally mark the summary as reviewed with their name and timestamp logged.',
+        body: 'A full-stack prototype demonstrating a UI pattern for presenting AI-generated clinical summaries in a way that is traceable, verifiable, and accessible. The core problem it solves is trust: when an AI model synthesizes a patient\'s medical history, every claim needs a path back to the source document that supports it. The app renders an AI-generated summary where each factual statement carries an inline citation that, when clicked, expands the exact source excerpt — progress notes, discharge summaries, echocardiograms, medication reconciliations. A clinician can read the output, verify every sentence against its source record, and formally mark the summary as reviewed with name and timestamp logged.',
       },
       {
-        label: 'Problem',
-        body: 'Most AI summary UIs present generated text as a black box — you get the output but no path back to the evidence. In regulated or high-stakes environments that is a non-starter. This project prototyped an answer: structured citation output from the model, rendered as interactive inline links, with a citation integrity check that fails the build if any citation references a nonexistent source or any source goes uncited. The review workflow adds an explicit human-in-the-loop checkpoint, making the AI\'s role clear to anyone reading the record.',
+        label: 'What Was Built',
+        body: 'The frontend is React with TypeScript, deployed to GitHub Pages. The AI layer is a Vercel serverless function that calls Google Gemini and returns structured JSON with citation IDs — the API key lives server-side and never touches the browser bundle. The model is prompted to return every factual claim as a cited segment with a sourceId that resolves to one of the provided source documents. A build-time Vitest test enforces citation integrity — the deploy fails if any citation references a nonexistent source or any source goes uncited.',
       },
       {
-        label: 'Solution',
-        body: 'The final pass brought the project to a level appropriate for professional portfolio use. All references to real healthcare organizations were scrubbed and replaced with fictional stand-ins. The app was brought to WCAG 2.1 AA compliance: contrast ratios were measured and corrected, semantic violations on interactive elements were fixed, a live announcement region was added for screen reader users, and the layout was verified to reflow at 320px with no horizontal scroll and to respect reduced-motion preferences. The Gemini API key was removed from the production build entirely — the deployed demo always serves pre-generated example data with no credentials exposed in the public bundle. An automated test suite was added covering axe accessibility at three page states, full keyboard operability, and citation integrity, all wired into the GitHub Actions deploy pipeline so the site cannot ship if any check fails. The README documents the patterns, the stack, the accessibility verification approach, and the author\'s DHS Trusted Tester certification.',
+        label: 'How It Was Hardened',
+        body: 'All references to real healthcare organizations were replaced with fictional stand-ins. The app was brought to WCAG 2.1 AA compliance: contrast ratios were corrected, a semantic violation on interactive buttons was fixed, a live announcement region was added for screen reader users, and the layout was verified to reflow at 320px and respect reduced-motion preferences. Seven Playwright tests cover axe accessibility across three page states and full keyboard operability of every interactive element. Both test suites are wired into the GitHub Actions deploy pipeline — nothing ships if a test fails. The README documents the patterns, the stack, the accessibility verification approach, and the author\'s DHS Trusted Tester certification.',
       },
     ],
     links: [
