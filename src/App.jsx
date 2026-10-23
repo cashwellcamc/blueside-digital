@@ -4,6 +4,7 @@ import RightPanel from './components/RightPanel';
 import BlogPage from './pages/BlogPage';
 import ArticlePage from './pages/ArticlePage';
 import CaseStudiesPage from './pages/CaseStudiesPage';
+import PortfolioPage from './pages/PortfolioPage';
 import ContactPage from './pages/ContactPage';
 import LoginPage from './pages/LoginPage';
 
@@ -24,6 +25,7 @@ export default function App() {
       <Route path="/blog" element={<BlogPage />} />
       <Route path="/blog/:slug" element={<ArticlePage />} />
       <Route path="/case-studies" element={<CaseStudiesPage />} />
+      <Route path="/portfolio" element={<PortfolioPage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/login" element={<LoginPage />} />
     </Routes>

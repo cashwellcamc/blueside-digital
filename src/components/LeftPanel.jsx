@@ -37,6 +37,11 @@ export default function LeftPanel() {
         </div>
 
         <div className="contact-block" style={{ marginTop: '0.8rem' }}>
+          <div className="contact-label">Portfolio</div>
+          <Link className="contact-link" to="/portfolio">Selected Projects</Link>
+        </div>
+
+        <div className="contact-block" style={{ marginTop: '0.8rem' }}>
           <div className="contact-label">Clients</div>
           <span className="contact-link contact-link--disabled" aria-disabled="true">Login</span>
         </div>

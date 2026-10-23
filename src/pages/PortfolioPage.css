@@ -1,0 +1,178 @@
+/* ─── PORTFOLIO PAGE ──────────────────────────────────────────────────────── */
+
+.pf-shell {
+  min-height: 100vh;
+  background: var(--off-white);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Reuses blog-header, blog-wordmark, blog-back from BlogPage.css */
+
+.pf-main {
+  max-width: 1160px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+}
+
+/* ─── GRID ───────────────────────────────────────────────────────────────── */
+.pf-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.4rem;
+}
+
+/* single item spans full width */
+.pf-card:only-child {
+  grid-column: 1 / -1;
+  max-width: 800px;
+  justify-self: center;
+  width: 100%;
+}
+
+/* ─── CARD ───────────────────────────────────────────────────────────────── */
+.pf-card {
+  background: var(--white);
+  border-radius: 10px;
+  border: 1px solid rgba(13, 61, 107, 0.10);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ─── TITLE ──────────────────────────────────────────────────────────────── */
+.pf-card-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: clamp(1.1rem, 1.6vw, 1.45rem);
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  padding: 1.8rem 1.8rem 1rem;
+}
+
+/* ─── THUMBNAIL ──────────────────────────────────────────────────────────── */
+.pf-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0D3D6B 0%, #1A5A9A 55%, #2D7DD2 100%);
+  position: relative;
+}
+
+.pf-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.pf-card:hover .pf-thumb img {
+  transform: scale(1.03);
+}
+
+.pf-thumb-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(79, 163, 224, 0.30) 0%, transparent 55%),
+    radial-gradient(circle at 75% 70%, rgba(45, 125, 210, 0.20) 0%, transparent 45%);
+}
+
+/* ─── TAGS ───────────────────────────────────────────────────────────────── */
+.pf-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  padding: 1.1rem 1.8rem 0.6rem;
+}
+
+.pf-tag {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--blue-mid);
+  background: rgba(45, 125, 210, 0.07);
+  border: 1px solid rgba(45, 125, 210, 0.18);
+  border-radius: 3px;
+  padding: 0.18rem 0.55rem;
+}
+
+/* ─── PROBLEM / SOLUTION SECTIONS ────────────────────────────────────────── */
+.pf-section {
+  padding: 1.2rem 1.8rem;
+  border-top: 1px solid rgba(13, 61, 107, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.pf-section-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--blue-light);
+}
+
+.pf-section-body {
+  font-size: 0.88rem;
+  font-weight: 300;
+  color: var(--ink-muted);
+  line-height: 1.8;
+}
+
+/* ─── ACTIONS ────────────────────────────────────────────────────────────── */
+.pf-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 1.2rem 1.8rem 1.8rem;
+  border-top: 1px solid rgba(13, 61, 107, 0.07);
+}
+
+.pf-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.72rem 1.4rem;
+  background: var(--blue);
+  color: var(--white);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background 0.2s;
+}
+
+.pf-link:hover { background: var(--blue-mid); }
+
+.pf-link--ghost {
+  background: var(--white);
+  color: var(--blue);
+  border: 1px solid rgba(13, 61, 107, 0.25);
+}
+
+.pf-link--ghost:hover { background: var(--off-white); }
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .pf-grid {
+    grid-template-columns: 1fr;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .pf-main { padding: 2.5rem 1.25rem 4rem; }
+  .pf-card-title { padding: 1.4rem 1.4rem 0.8rem; font-size: 1.1rem; }
+  .pf-tags { padding: 0.9rem 1.4rem 0.5rem; }
+  .pf-section { padding: 1rem 1.4rem; }
+  .pf-actions { padding: 1rem 1.4rem 1.4rem; }
+}
