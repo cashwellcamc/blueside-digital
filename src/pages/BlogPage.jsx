@@ -1,4 +1,22 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
+
+const TOPIC_MAP = {
+  'Accessibility':          ['accessibility', 'wcag', 'ada', '508', 'section-508', 'trusted tester', 'hhs', 'ux access', 'semantic html', 'audit'],
+  'AI':                     ['ai', 'artificial intelligence', 'generative', 'claude', 'chatgpt', 'llm', 'vibe cod'],
+  'CMS & Drupal':           ['drupal', 'cms', 'headless', 'wordpress', 'sanity', 'payload', 'strapi', 'aem', 'adobe experience', 'adobe-experience', 'next.js', 'content-management', 'content management'],
+  'Healthcare & Pharma':    ['healthcare', 'pharma', 'veeva', 'patient', 'life-science', 'life science', 'clm', 'regulated'],
+  'Security & Compliance':  ['security', 'hipaa', 'hippa', 'owasp', 'secure', 'data privacy', 'data-breach', 'consent', 'compliance', 'hardening', 'governance'],
+  'Web Development':        ['javascript', 'typescript', 'react', 'php', 'python', 'graphql', 'html', 'css', 'front-end', 'frontend', 'full stack', 'web development', 'web-development', 'serverless', 'aws', 'lambda', 'dynamo', 'performance', 'mobile', 'architecture', 'developer', 'software', 'workflow', 'tech-debt', 'clean-code'],
+};
+
+const TOPICS = Object.keys(TOPIC_MAP);
+
+function tagMatchesTopic(tags, topicKey) {
+  const patterns = TOPIC_MAP[topicKey];
+  return (tags || []).some(tag =>
+    patterns.some(p => tag.toLowerCase().includes(p.toLowerCase()))
+  );
+}
 import { Link } from 'react-router-dom';
 import { client, ARTICLES_QUERY } from '../lib/sanity.js';
 import './BlogPage.css';
@@ -31,11 +49,6 @@ export default function BlogPage() {
       .catch(() => setLoading(false));
   }, []);
 
-  const topics = useMemo(() => {
-    const all = articles.flatMap(a => a.tags || []);
-    return [...new Set(all)].sort();
-  }, [articles]);
-
   const sorted = [...articles].sort((a, b) => {
     if (sort === 'most') return (b.viewCount || 0) - (a.viewCount || 0);
     if (sort === 'least') return (a.viewCount || 0) - (b.viewCount || 0);
@@ -43,7 +56,7 @@ export default function BlogPage() {
   });
 
   const filtered = topic
-    ? sorted.filter(a => a.tags && a.tags.includes(topic))
+    ? sorted.filter(a => tagMatchesTopic(a.tags, topic))
     : sorted;
 
   return (
@@ -74,7 +87,7 @@ export default function BlogPage() {
             </button>
           ))}
 
-          {topics.length > 0 && (
+          {!loading && articles.length > 0 && (
             <>
               <span className="blog-filter-divider" aria-hidden="true" />
               <span className="blog-filter-label">Topic:</span>
@@ -85,7 +98,7 @@ export default function BlogPage() {
                 aria-label="Filter by topic"
               >
                 <option value="">All Topics</option>
-                {topics.map(t => (
+                {TOPICS.map(t => (
                   <option key={t} value={t}>{t}</option>
                 ))}
               </select>
