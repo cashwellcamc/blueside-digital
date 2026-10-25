@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { client, ARTICLES_QUERY } from '../lib/sanity.js';
 import './BlogPage.css';
@@ -18,6 +18,7 @@ export default function BlogPage() {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sort, setSort] = useState('date');
+  const [topic, setTopic] = useState('');
 
   useEffect(() => {
     document.title = 'Articles & Insights | Blueside Digital';
@@ -30,11 +31,20 @@ export default function BlogPage() {
       .catch(() => setLoading(false));
   }, []);
 
+  const topics = useMemo(() => {
+    const all = articles.flatMap(a => a.tags || []);
+    return [...new Set(all)].sort();
+  }, [articles]);
+
   const sorted = [...articles].sort((a, b) => {
     if (sort === 'most') return (b.viewCount || 0) - (a.viewCount || 0);
     if (sort === 'least') return (a.viewCount || 0) - (b.viewCount || 0);
     return new Date(b.publishedAt) - new Date(a.publishedAt);
   });
+
+  const filtered = topic
+    ? sorted.filter(a => a.tags && a.tags.includes(topic))
+    : sorted;
 
   return (
     <div className="blog-shell">
@@ -47,7 +57,7 @@ export default function BlogPage() {
       </header>
 
       <main className="blog-main">
-        <div className="blog-filter-bar" role="group" aria-label="Sort articles">
+        <div className="blog-filter-bar" role="group" aria-label="Filter and sort articles">
           <span className="blog-filter-label">Sort:</span>
           {[
             { key: 'date', label: 'Latest' },
@@ -63,6 +73,24 @@ export default function BlogPage() {
               {label}
             </button>
           ))}
+
+          {topics.length > 0 && (
+            <>
+              <span className="blog-filter-divider" aria-hidden="true" />
+              <span className="blog-filter-label">Topic:</span>
+              <select
+                className={`blog-topic-select${topic ? ' active' : ''}`}
+                value={topic}
+                onChange={e => setTopic(e.target.value)}
+                aria-label="Filter by topic"
+              >
+                <option value="">All Topics</option>
+                {topics.map(t => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+            </>
+          )}
         </div>
 
         {loading && (
@@ -73,7 +101,11 @@ export default function BlogPage() {
           <div className="blog-empty">No published articles yet.</div>
         )}
 
-        {sorted.map((article) => (
+        {!loading && articles.length > 0 && filtered.length === 0 && (
+          <div className="blog-empty">No articles tagged &ldquo;{topic}&rdquo; yet.</div>
+        )}
+
+        {filtered.map((article) => (
           <article key={article._id} className="blog-article" aria-labelledby={`title-${article._id}`}>
             <div className="blog-article-meta">
               {article.publishedAt && (
