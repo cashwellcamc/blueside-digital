@@ -105,6 +105,19 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  background: var(--white);
+  border: 1px solid rgba(13, 61, 107, 0.10);
+  border-radius: 8px;
+  padding: 1.2rem 1.4rem;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+/* non-interactive items (education with no detail) get no hover */
+.tl-item--education .tl-content {
+  background: transparent;
+  border-color: transparent;
+  padding: 0;
+  box-shadow: none;
 }
 
 /* ─── CLICKABLE HEADER ────────────────────────────────────────────────────── */
@@ -120,28 +133,38 @@
   flex-direction: column;
   gap: 0.28rem;
   width: 100%;
-  position: relative;
 }
 
-.tl-header:hover .tl-role { color: var(--blue-mid); }
+.tl-content:has(.tl-header):hover {
+  border-color: rgba(13, 61, 107, 0.22);
+  box-shadow: 0 2px 10px rgba(13, 61, 107, 0.06);
+}
 
-/* chevron — right-pointing, rotates 90° when open */
-.tl-chevron {
-  display: block;
-  width: 0;
-  height: 0;
-  border-top:   4px solid transparent;
-  border-bottom: 4px solid transparent;
-  border-left:  6px solid var(--blue-light);
-  margin-top: 0.45rem;
-  transition: transform 0.22s ease;
+/* labeled expand/collapse trigger */
+.tl-toggle-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+  font-size: 0.71rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--blue-mid);
+  border-bottom: 1px solid rgba(26, 90, 154, 0.28);
+  padding-bottom: 0.05rem;
+  transition: color 0.15s, border-color 0.15s;
   align-self: flex-start;
-  opacity: 0.6;
 }
 
-.tl-item:nth-child(odd) .tl-chevron { align-self: flex-end; }
+.tl-item:nth-child(odd) .tl-toggle-label { align-self: flex-end; }
 
-.tl-header.open .tl-chevron { transform: rotate(90deg); }
+.tl-header:hover .tl-toggle-label {
+  color: var(--blue);
+  border-color: rgba(13, 61, 107, 0.55);
+}
+
+.tl-header.open .tl-toggle-label { color: var(--ink-muted); border-color: rgba(0,0,0,0.18); }
 
 .tl-period {
   display: block;

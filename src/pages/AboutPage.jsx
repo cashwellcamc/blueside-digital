@@ -247,7 +247,9 @@ export default function AboutPage() {
                       <span className="tl-org">{org}</span>
                       {location && <span className="tl-location">{location}</span>}
                       {detail   && <span className="tl-detail">{detail}</span>}
-                      <span className="tl-chevron" aria-hidden="true" />
+                      <span className="tl-toggle-label" aria-hidden="true">
+                        {isOpen ? '− Collapse' : '+ Show experience'}
+                      </span>
                     </button>
                   ) : (
                     <>
