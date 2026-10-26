@@ -17,8 +17,20 @@ const SITE = 'https://bluesidedigital.com';
 
 function setMeta(selector, attr, value) {
   let el = document.querySelector(selector);
-  if (!el) { el = document.createElement('meta'); document.head.appendChild(el); }
+  if (!el) {
+    el = document.createElement('meta');
+    // extract the identifying attribute from the selector and set it on the new element
+    // e.g. 'meta[property="og:image"]' → sets property="og:image" before appending
+    const match = selector.match(/\[(\w[\w:.-]*)=["']([^"']+)["']\]/);
+    if (match) el.setAttribute(match[1], match[2]);
+    document.head.appendChild(el);
+  }
   el.setAttribute(attr, value);
+}
+
+function sanityTwitterImg(url) {
+  if (!url) return null;
+  return `${url}?w=1200&h=630&fit=crop&auto=format&fm=jpg`;
 }
 
 const ptComponents = {
@@ -139,10 +151,13 @@ export default function ArticlePage() {
     if (article.publishedAt) {
       setMeta('meta[property="article:published_time"]', 'content', article.publishedAt);
     }
-    if (article.mainImage) {
-      setMeta('meta[property="og:image"]',       'content', article.mainImage);
-      setMeta('meta[name="twitter:image"]',      'content', article.mainImage);
-      setMeta('meta[name="twitter:card"]',       'content', 'summary_large_image');
+    const imgUrl = sanityTwitterImg(article.mainImage);
+    if (imgUrl) {
+      setMeta('meta[property="og:image"]',          'content', imgUrl);
+      setMeta('meta[property="og:image:width"]',    'content', '1200');
+      setMeta('meta[property="og:image:height"]',   'content', '630');
+      setMeta('meta[name="twitter:image"]',         'content', imgUrl);
+      setMeta('meta[name="twitter:card"]',          'content', 'summary_large_image');
     }
 
     return () => {
