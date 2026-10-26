@@ -6,7 +6,8 @@ const TOPIC_MAP = {
   'Content Management Systems': ['drupal', 'cms', 'headless', 'wordpress', 'sanity', 'payload', 'strapi', 'aem', 'adobe experience', 'adobe-experience', 'next.js', 'content-management', 'content management'],
   'Healthcare & Pharma':    ['healthcare', 'pharma', 'veeva', 'patient', 'life-science', 'life science', 'clm', 'regulated'],
   'Security & Compliance':  ['security', 'hipaa', 'hippa', 'owasp', 'secure', 'data privacy', 'data-breach', 'consent', 'compliance', 'hardening', 'governance'],
-  'Web Development':        ['javascript', 'typescript', 'react', 'php', 'python', 'graphql', 'html', 'css', 'front-end', 'frontend', 'full stack', 'web development', 'web-development', 'serverless', 'aws', 'lambda', 'dynamo', 'performance', 'mobile', 'architecture', 'developer', 'software', 'workflow', 'tech-debt', 'clean-code'],
+  'MarTech & Analytics':    ['analytics', 'seo', 'mar-tech', 'martech', 'marketing', 'google tag manager', 'gtm', 'ga4', 'adobe analytics', 'performance', 'web strategy', 'web-strategy', 'content strategy', 'digital marketing', 'web marketing', 'hubspot', 'salesforce', 'crm'],
+  'Web Development':        ['javascript', 'typescript', 'react', 'php', 'python', 'graphql', 'html', 'css', 'front-end', 'frontend', 'full stack', 'web development', 'web-development', 'serverless', 'aws', 'lambda', 'dynamo', 'mobile', 'architecture', 'developer', 'software', 'workflow', 'tech-debt', 'clean-code'],
 };
 
 const TOPICS = Object.keys(TOPIC_MAP);
