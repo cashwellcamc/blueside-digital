@@ -162,6 +162,124 @@
   margin-top: 0.1rem;
 }
 
+.tl-location {
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  opacity: 0.65;
+  letter-spacing: 0.02em;
+}
+
+/* ─── EXPANDED DETAIL ─────────────────────────────────────────────────────── */
+
+/* force left-align for all body content regardless of which side it's on */
+.tl-intro,
+.tl-bullets,
+.tl-companies {
+  text-align: left;
+}
+
+.tl-intro {
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: var(--ink-muted);
+  line-height: 1.78;
+  margin-top: 0.7rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid rgba(13, 61, 107, 0.07);
+}
+
+.tl-bullets {
+  margin-top: 0.75rem;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.tl-bullets li {
+  position: relative;
+  font-size: 0.78rem;
+  font-weight: 300;
+  color: var(--ink-muted);
+  line-height: 1.72;
+  padding-left: 1rem;
+}
+
+.tl-bullets li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--blue-light);
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+/* ─── NESTED COMPANIES ────────────────────────────────────────────────────── */
+.tl-companies {
+  margin-top: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.tl-company {
+  padding: 1.1rem 0 0;
+  margin-top: 1.1rem;
+  border-top: 1px solid rgba(13, 61, 107, 0.08);
+}
+
+.tl-company:first-child {
+  padding-top: 0.9rem;
+  margin-top: 0.9rem;
+  border-top: 1px solid rgba(13, 61, 107, 0.08);
+}
+
+.tl-company-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+}
+
+.tl-company-role {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+  line-height: 1.3;
+}
+
+.tl-company-org {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--blue-mid);
+}
+
+.tl-company-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.1rem;
+}
+
+.tl-company-period,
+.tl-company-location {
+  font-size: 0.68rem;
+  color: var(--ink-muted);
+  opacity: 0.65;
+  letter-spacing: 0.02em;
+}
+
+.tl-company-period::after {
+  content: '·';
+  margin-left: 0.5rem;
+  opacity: 0.5;
+}
+
+.tl-company-location:last-child::after { content: none; }
+
 /* ─── RESPONSIVE ─────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   .about-main { padding: 2.5rem 1.25rem 5rem; }
@@ -194,4 +312,11 @@
   .tl-item:nth-child(even) .tl-type-badge {
     align-self: flex-start;
   }
+
+  .tl-company-meta {
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .tl-company-period::after { content: none; }
 }
