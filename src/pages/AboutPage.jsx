@@ -245,6 +245,8 @@ export default function AboutPage() {
 
             return (
               <div key={i} className={`tl-item tl-item--${type}${!hasDetail ? ' tl-item--static' : ''}`}>
+                <div className="tl-period-label" aria-hidden="true">{period}</div>
+
                 <div className="tl-content">
 
                   {hasDetail ? (
@@ -254,7 +256,6 @@ export default function AboutPage() {
                       aria-expanded={isOpen}
                       aria-controls={`tl-panel-${i}`}
                     >
-                      <span className="tl-period">{period}</span>
                       <span className={`tl-type-badge tl-type-badge--${type}`}>
                         {type === 'education' ? 'Education' : 'Experience'}
                       </span>
@@ -268,7 +269,6 @@ export default function AboutPage() {
                     </button>
                   ) : (
                     <>
-                      <span className="tl-period">{period}</span>
                       <span className={`tl-type-badge tl-type-badge--${type}`}>
                         {type === 'education' ? 'Education' : 'Experience'}
                       </span>

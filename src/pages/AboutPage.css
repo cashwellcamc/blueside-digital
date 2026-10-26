@@ -60,7 +60,8 @@
 .tl-item {
   position: relative;
   width: 50%;
-  padding-bottom: 3rem;
+  padding-top: 3rem;
+  padding-bottom: 2.8rem;
 }
 
 /* odd items: left side, text right-aligned */
@@ -76,11 +77,11 @@
   text-align: left;
 }
 
-/* dot on the line */
+/* dot on the line — sits between period label and card */
 .tl-item::before {
   content: '';
   position: absolute;
-  top: 5px;
+  top: 2.1rem;
   width: 9px;
   height: 9px;
   border-radius: 50%;
@@ -98,6 +99,34 @@
   background: var(--white);
   border-color: var(--blue-light);
   box-shadow: 0 0 0 1px rgba(45, 125, 210, 0.25);
+}
+
+/* ─── PERIOD LABEL (centered on the line) ────────────────────────────────── */
+.tl-period-label {
+  position: absolute;
+  top: 0;
+  white-space: nowrap;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--blue-mid);
+  background: var(--off-white);
+  padding: 0 0.45rem 0.28rem;
+  border-bottom: 1px solid rgba(13, 61, 107, 0.20);
+  z-index: 2;
+}
+
+/* odd: right edge of item = center line; center label on it */
+.tl-item:nth-child(odd) .tl-period-label {
+  left: 100%;
+  transform: translateX(-50%);
+}
+
+/* even: left edge of item = center line; center label on it */
+.tl-item:nth-child(even) .tl-period-label {
+  right: 100%;
+  transform: translateX(50%);
 }
 
 /* ─── CONTENT BLOCK ───────────────────────────────────────────────────────── */
@@ -166,14 +195,6 @@
 
 .tl-header.open .tl-toggle-label { color: var(--ink-muted); border-color: rgba(0,0,0,0.18); }
 
-.tl-period {
-  display: block;
-  font-size: 0.63rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--blue-light);
-}
 
 .tl-type-badge {
   display: inline-block;
@@ -416,6 +437,7 @@
   .tl-item:nth-child(even) {
     width: 100%;
     margin-left: 0;
+    padding-top: 0;
     padding-left: 2.4rem;
     padding-right: 0;
     text-align: left;
@@ -424,14 +446,30 @@
   .tl-item::before,
   .tl-item:nth-child(odd)::before,
   .tl-item:nth-child(even)::before {
+    top: 5px;
     left: 6px;
     right: auto;
+  }
+
+  /* period label goes inline above the card on mobile */
+  .tl-period-label,
+  .tl-item:nth-child(odd) .tl-period-label,
+  .tl-item:nth-child(even) .tl-period-label {
+    position: static;
+    transform: none;
+    display: inline-block;
+    margin-bottom: 0.55rem;
+    padding-left: 0;
+    background: transparent;
   }
 
   .tl-item:nth-child(odd) .tl-type-badge,
   .tl-item:nth-child(even) .tl-type-badge {
     align-self: flex-start;
   }
+
+  .tl-item:nth-child(odd) .tl-toggle-label { align-self: flex-start; }
+  .tl-item:nth-child(odd) .tl-chevron      { align-self: flex-start; }
 
   .tl-company-meta {
     flex-direction: column;
