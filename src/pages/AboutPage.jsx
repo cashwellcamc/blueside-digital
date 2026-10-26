@@ -13,7 +13,7 @@ const TIMELINE = [
   {
     period: '2025 – 2026',
     type: 'work',
-    role: 'Senior Web Developer',
+    role: 'Web Platforms Lead',
     org: 'Healthcare',
     detail: null,
   },
