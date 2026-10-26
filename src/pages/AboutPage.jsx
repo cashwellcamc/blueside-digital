@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './AboutPage.css';
 
@@ -190,6 +190,14 @@ const TIMELINE = [
 ];
 
 export default function AboutPage() {
+  const [expanded, setExpanded] = useState(new Set());
+
+  const toggle = (i) => setExpanded(prev => {
+    const next = new Set(prev);
+    next.has(i) ? next.delete(i) : next.add(i);
+    return next;
+  });
+
   useEffect(() => {
     document.title = 'About | Blueside Digital';
     return () => { document.title = 'Blueside Digital | WCAG & ADA Accessibility Consulting'; };
@@ -216,51 +224,89 @@ export default function AboutPage() {
         </div>
 
         <div className="about-timeline" aria-label="Career timeline">
-          {TIMELINE.map(({ period, type, role, org, location, detail, intro, bullets, companies }, i) => (
-            <div key={i} className={`tl-item tl-item--${type}`}>
-              <div className="tl-content">
-                <span className="tl-period">{period}</span>
-                <span className={`tl-type-badge tl-type-badge--${type}`}>
-                  {type === 'education' ? 'Education' : 'Experience'}
-                </span>
-                <p className="tl-role">{role}</p>
-                <p className="tl-org">{org}</p>
-                {location && <p className="tl-location">{location}</p>}
-                {detail  && <p className="tl-detail">{detail}</p>}
+          {TIMELINE.map(({ period, type, role, org, location, detail, intro, bullets, companies }, i) => {
+            const hasDetail = !!(intro || bullets?.length || companies?.length);
+            const isOpen    = expanded.has(i);
 
-                {intro && <p className="tl-intro">{intro}</p>}
+            return (
+              <div key={i} className={`tl-item tl-item--${type}`}>
+                <div className="tl-content">
 
-                {bullets?.length > 0 && (
-                  <ul className="tl-bullets">
-                    {bullets.map((b, j) => <li key={j}>{b}</li>)}
-                  </ul>
-                )}
+                  {hasDetail ? (
+                    <button
+                      className={`tl-header${isOpen ? ' open' : ''}`}
+                      onClick={() => toggle(i)}
+                      aria-expanded={isOpen}
+                      aria-controls={`tl-panel-${i}`}
+                    >
+                      <span className="tl-period">{period}</span>
+                      <span className={`tl-type-badge tl-type-badge--${type}`}>
+                        {type === 'education' ? 'Education' : 'Experience'}
+                      </span>
+                      <span className="tl-role">{role}</span>
+                      <span className="tl-org">{org}</span>
+                      {location && <span className="tl-location">{location}</span>}
+                      {detail   && <span className="tl-detail">{detail}</span>}
+                      <span className="tl-chevron" aria-hidden="true" />
+                    </button>
+                  ) : (
+                    <>
+                      <span className="tl-period">{period}</span>
+                      <span className={`tl-type-badge tl-type-badge--${type}`}>
+                        {type === 'education' ? 'Education' : 'Experience'}
+                      </span>
+                      <span className="tl-role">{role}</span>
+                      <span className="tl-org">{org}</span>
+                      {location && <span className="tl-location">{location}</span>}
+                      {detail   && <span className="tl-detail">{detail}</span>}
+                    </>
+                  )}
 
-                {companies?.length > 0 && (
-                  <div className="tl-companies">
-                    {companies.map((c, j) => (
-                      <div key={j} className="tl-company">
-                        <div className="tl-company-header">
-                          <p className="tl-company-role">{c.role}</p>
-                          <p className="tl-company-org">{c.org}</p>
-                          <div className="tl-company-meta">
-                            {c.period   && <span className="tl-company-period">{c.period}</span>}
-                            {c.location && <span className="tl-company-location">{c.location}</span>}
-                          </div>
-                        </div>
-                        {c.intro && <p className="tl-intro">{c.intro}</p>}
-                        {c.bullets?.length > 0 && (
+                  {hasDetail && (
+                    <div
+                      className={`tl-detail-panel${isOpen ? ' open' : ''}`}
+                      id={`tl-panel-${i}`}
+                      aria-hidden={!isOpen}
+                    >
+                      <div className="tl-detail-inner">
+                        {intro && <p className="tl-intro">{intro}</p>}
+
+                        {bullets?.length > 0 && (
                           <ul className="tl-bullets">
-                            {c.bullets.map((b, k) => <li key={k}>{b}</li>)}
+                            {bullets.map((b, j) => <li key={j}>{b}</li>)}
                           </ul>
                         )}
+
+                        {companies?.length > 0 && (
+                          <div className="tl-companies">
+                            {companies.map((c, j) => (
+                              <div key={j} className="tl-company">
+                                <div className="tl-company-header">
+                                  <p className="tl-company-role">{c.role}</p>
+                                  <p className="tl-company-org">{c.org}</p>
+                                  <div className="tl-company-meta">
+                                    {c.period   && <span className="tl-company-period">{c.period}</span>}
+                                    {c.location && <span className="tl-company-location">{c.location}</span>}
+                                  </div>
+                                </div>
+                                {c.intro && <p className="tl-intro">{c.intro}</p>}
+                                {c.bullets?.length > 0 && (
+                                  <ul className="tl-bullets">
+                                    {c.bullets.map((b, k) => <li key={k}>{b}</li>)}
+                                  </ul>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
-                    ))}
-                  </div>
-                )}
+                    </div>
+                  )}
+
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </main>
     </div>
