@@ -56,6 +56,11 @@ const TIMELINE = [
     role: 'Master of Science, Enterprise Application Development',
     org: 'Aspen University',
     detail: 'Information Systems Technology',
+    eduDetail: {
+      grade: '3.38',
+      activities: 'Honors, National Society of Leadership and Success',
+      skills: 'Software Development Life Cycle (SDLC)',
+    },
   },
   {
     period: '2017 – 2021',
@@ -112,6 +117,11 @@ const TIMELINE = [
     role: "Bachelor's in Web Technologies",
     org: 'Bellevue University',
     detail: null,
+    eduDetail: {
+      grade: '3.75',
+      activities: 'Honors',
+      skills: 'Web Development',
+    },
   },
   {
     period: '2011 – 2017',
@@ -186,6 +196,11 @@ const TIMELINE = [
     role: 'Associate of Applied Sciences, Internet Applications Development',
     org: 'Reynolds College',
     detail: 'Information Systems Technology',
+    eduDetail: {
+      grade: '3.78',
+      activities: 'Honors, On-site',
+      skills: 'Web Application Development',
+    },
   },
 ];
 
@@ -224,12 +239,12 @@ export default function AboutPage() {
         </div>
 
         <div className="about-timeline" aria-label="Career timeline">
-          {TIMELINE.map(({ period, type, role, org, location, detail, intro, bullets, companies }, i) => {
-            const hasDetail = !!(intro || bullets?.length || companies?.length);
+          {TIMELINE.map(({ period, type, role, org, location, detail, intro, bullets, companies, eduDetail }, i) => {
+            const hasDetail = !!(intro || bullets?.length || companies?.length || eduDetail);
             const isOpen    = expanded.has(i);
 
             return (
-              <div key={i} className={`tl-item tl-item--${type}`}>
+              <div key={i} className={`tl-item tl-item--${type}${!hasDetail ? ' tl-item--static' : ''}`}>
                 <div className="tl-content">
 
                   {hasDetail ? (
@@ -248,7 +263,7 @@ export default function AboutPage() {
                       {location && <span className="tl-location">{location}</span>}
                       {detail   && <span className="tl-detail">{detail}</span>}
                       <span className="tl-toggle-label" aria-hidden="true">
-                        {isOpen ? '− Collapse' : '+ Show experience'}
+                        {isOpen ? '− Close' : '+ Read more'}
                       </span>
                     </button>
                   ) : (
@@ -300,6 +315,14 @@ export default function AboutPage() {
                               </div>
                             ))}
                           </div>
+                        )}
+
+                        {eduDetail && (
+                          <dl className="tl-edu-stats">
+                            {eduDetail.grade      && <div className="tl-edu-stat"><dt>Grade</dt><dd>{eduDetail.grade}</dd></div>}
+                            {eduDetail.activities && <div className="tl-edu-stat"><dt>Activities</dt><dd>{eduDetail.activities}</dd></div>}
+                            {eduDetail.skills     && <div className="tl-edu-stat"><dt>Skills</dt><dd>{eduDetail.skills}</dd></div>}
+                          </dl>
                         )}
                       </div>
                     </div>
