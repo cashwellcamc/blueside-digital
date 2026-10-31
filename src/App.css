@@ -478,8 +478,8 @@ html, body {
 
 /* ─── GLOBAL FOOTER ────────────────────────────── */
 .global-footer {
-  background: var(--blue);
-  color: rgba(255, 255, 255, 0.5);
+  background: #061624;
+  color: rgba(255, 255, 255, 0.4);
   text-align: center;
   padding: 1.1rem 2rem;
   font-size: 0.67rem;
