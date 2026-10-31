@@ -257,7 +257,6 @@ export default function ArticlePage() {
           </article>
         )}
       </main>
-      <footer className="page-footer">© {new Date().getFullYear()} Blueside Digital. All rights reserved.</footer>
     </div>
   );
 }

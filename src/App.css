@@ -476,22 +476,13 @@ html, body {
   .tech-item svg        { width: 1.5rem; height: 1.5rem; }
 }
 
-/* ─── PAGE FOOTER ─────────────────────────────── */
-.page-footer {
+/* ─── GLOBAL FOOTER ────────────────────────────── */
+.global-footer {
+  background: var(--blue);
+  color: rgba(255, 255, 255, 0.5);
   text-align: center;
-  padding: 1.5rem 2rem 2.5rem;
-  font-size: 0.68rem;
+  padding: 1.1rem 2rem;
+  font-size: 0.67rem;
   font-weight: 400;
-  letter-spacing: 0.06em;
-  color: var(--ink-muted);
-  opacity: 0.45;
-}
-
-/* pins copyright to the bottom of the left panel on the homepage */
-.left-footer {
-  position: absolute;
-  bottom: 1.2rem;
-  left: 0;
-  right: 0;
-  padding: 0;
+  letter-spacing: 0.08em;
 }

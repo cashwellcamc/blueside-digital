@@ -21,15 +21,20 @@ function HomePage() {
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/blog" element={<BlogPage />} />
-      <Route path="/blog/:slug" element={<ArticlePage />} />
-      <Route path="/case-studies" element={<CaseStudiesPage />} />
-      <Route path="/portfolio" element={<PortfolioPage />} />
-      <Route path="/about" element={<AboutPage />} />
-      <Route path="/contact" element={<ContactPage />} />
-      <Route path="/login" element={<LoginPage />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:slug" element={<ArticlePage />} />
+        <Route path="/case-studies" element={<CaseStudiesPage />} />
+        <Route path="/portfolio" element={<PortfolioPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/login" element={<LoginPage />} />
+      </Routes>
+      <footer className="global-footer">
+        © {new Date().getFullYear()} Blueside Digital. All rights reserved.
+      </footer>
+    </>
   );
 }
