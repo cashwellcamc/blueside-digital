@@ -5,9 +5,9 @@ export default function IntroOverlay({ onDone }) {
 
   useEffect(() => {
     const timers = [
-      setTimeout(() => setPhase('push'),  1000), // logo shown → blue starts sliding in
-      setTimeout(() => setPhase('exit'),  1960), // blue landed → both fade out
-      setTimeout(onDone,                  2420), // fully gone → remove from DOM
+      setTimeout(() => setPhase('push'),   550), // logo shown → blue starts sliding in
+      setTimeout(() => setPhase('exit'),  1150), // blue landed → both fade out
+      setTimeout(onDone,                  1450), // fully gone → remove from DOM
     ];
     return () => timers.forEach(clearTimeout);
   }, [onDone]);

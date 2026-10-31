@@ -131,6 +131,7 @@
 
 /* ─── CONTENT BLOCK ───────────────────────────────────────────────────────── */
 .tl-content {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -140,6 +141,23 @@
   padding: 1.2rem 1.4rem;
   transition: border-color 0.18s, box-shadow 0.18s;
 }
+
+/* horizontal arm connecting the card edge to the period label */
+.tl-item:nth-child(odd) .tl-content::before,
+.tl-item:nth-child(even) .tl-content::before {
+  content: '';
+  position: absolute;
+  top: -2rem;       /* aligns with the period label's underline height */
+  width: 3.2rem;    /* spans the padding gap to the center line */
+  height: 1px;
+  background: rgba(13, 61, 107, 0.18);
+}
+
+.tl-item:nth-child(odd) .tl-content::before  { right: -3.2rem; } /* arm goes right toward center */
+.tl-item:nth-child(even) .tl-content::before { left:  -3.2rem; } /* arm goes left toward center */
+
+/* static/education items with no card chrome get no arm */
+.tl-item--static .tl-content::before { display: none; }
 
 /* static items (no expandable content) get no card chrome */
 .tl-item--static .tl-content {

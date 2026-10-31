@@ -475,3 +475,23 @@ html, body {
   .tech-item i          { font-size: 1.5rem; }
   .tech-item svg        { width: 1.5rem; height: 1.5rem; }
 }
+
+/* ─── PAGE FOOTER ─────────────────────────────── */
+.page-footer {
+  text-align: center;
+  padding: 1.5rem 2rem 2.5rem;
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  opacity: 0.45;
+}
+
+/* pins copyright to the bottom of the left panel on the homepage */
+.left-footer {
+  position: absolute;
+  bottom: 1.2rem;
+  left: 0;
+  right: 0;
+  padding: 0;
+}

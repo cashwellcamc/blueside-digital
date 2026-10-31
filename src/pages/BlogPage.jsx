@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const TOPIC_MAP = {
   'Accessibility':          ['accessibility', 'wcag', 'ada', '508', 'section-508', 'trusted tester', 'hhs', 'ux access', 'semantic html', 'audit'],
@@ -38,6 +38,61 @@ export default function BlogPage() {
   const [loading, setLoading] = useState(true);
   const [sort, setSort] = useState('date');
   const [topic, setTopic] = useState('');
+  const [inputValue, setInputValue] = useState('');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [highlightedIdx, setHighlightedIdx] = useState(-1);
+  const inputRef = useRef(null);
+
+  // Show all options when nothing is typed or a topic is already selected (not mid-search)
+  const matchedTopics = TOPICS.filter(t => {
+    if (!inputValue || inputValue === topic) return true;
+    return t.toLowerCase().includes(inputValue.toLowerCase());
+  });
+
+  function selectTopic(t) {
+    setTopic(t);
+    setInputValue(t);
+    setDropdownOpen(false);
+    setHighlightedIdx(-1);
+  }
+
+  function clearSearch() {
+    setTopic('');
+    setInputValue('');
+    setDropdownOpen(false);
+    setHighlightedIdx(-1);
+    inputRef.current?.focus();
+  }
+
+  function handleInputChange(e) {
+    setInputValue(e.target.value);
+    setTopic('');
+    setDropdownOpen(true);
+    setHighlightedIdx(-1);
+  }
+
+  function handleInputFocus() {
+    setDropdownOpen(true);
+  }
+
+  function handleInputBlur() {
+    setDropdownOpen(false);
+  }
+
+  function handleKeyDown(e) {
+    if (!dropdownOpen) { if (e.key === 'ArrowDown') setDropdownOpen(true); return; }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setHighlightedIdx(i => Math.min(i + 1, matchedTopics.length - 1));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setHighlightedIdx(i => Math.max(i - 1, 0));
+    } else if (e.key === 'Enter') {
+      if (highlightedIdx >= 0 && matchedTopics[highlightedIdx]) selectTopic(matchedTopics[highlightedIdx]);
+    } else if (e.key === 'Escape') {
+      setDropdownOpen(false);
+    }
+  }
 
   useEffect(() => {
     document.title = 'Articles & Insights | Blueside Digital';
@@ -91,18 +146,55 @@ export default function BlogPage() {
           {!loading && articles.length > 0 && (
             <>
               <span className="blog-filter-divider" aria-hidden="true" />
-              <span className="blog-filter-label">Topic:</span>
-              <select
-                className={`blog-topic-select${topic ? ' active' : ''}`}
-                value={topic}
-                onChange={e => setTopic(e.target.value)}
-                aria-label="Filter by topic"
-              >
-                <option value="">All Topics</option>
-                {TOPICS.map(t => (
-                  <option key={t} value={t}>{t}</option>
-                ))}
-              </select>
+              <span className="blog-filter-label blog-filter-label--topic">Topic:</span>
+              <div className="blog-topic-wrap">
+                <div className={`blog-topic-search${topic ? ' active' : ''}`}>
+                  <svg className="blog-topic-icon" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.5"/>
+                    <path d="M9.5 9.5L13 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    className="blog-topic-input"
+                    placeholder="Search topics…"
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
+                    onKeyDown={handleKeyDown}
+                    aria-label="Filter by topic"
+                    aria-autocomplete="list"
+                    aria-expanded={dropdownOpen}
+                    aria-controls="blog-topic-list"
+                    role="combobox"
+                    autoComplete="off"
+                  />
+                  {(inputValue || topic) && (
+                    <button
+                      className="blog-topic-clear"
+                      onMouseDown={(e) => { e.preventDefault(); clearSearch(); }}
+                      aria-label="Clear topic filter"
+                      tabIndex={-1}
+                    >×</button>
+                  )}
+                </div>
+                {dropdownOpen && matchedTopics.length > 0 && (
+                  <ul id="blog-topic-list" className="blog-topic-dropdown" role="listbox" aria-label="Topics">
+                    {matchedTopics.map((t, i) => (
+                      <li
+                        key={t}
+                        role="option"
+                        aria-selected={topic === t}
+                        className={`blog-topic-option${i === highlightedIdx ? ' highlighted' : ''}${topic === t ? ' selected' : ''}`}
+                        onMouseDown={(e) => { e.preventDefault(); selectTopic(t); }}
+                      >
+                        {t}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </>
           )}
         </div>
@@ -144,6 +236,7 @@ export default function BlogPage() {
           </article>
         ))}
       </main>
+      <footer className="page-footer">© {new Date().getFullYear()} Blueside Digital. All rights reserved.</footer>
     </div>
   );
 }

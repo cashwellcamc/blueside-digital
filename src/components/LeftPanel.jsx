@@ -56,6 +56,8 @@ export default function LeftPanel() {
         <span className="dot" aria-hidden="true" />
         Available for new engagements
       </div>
+
+      <footer className="page-footer left-footer">© {new Date().getFullYear()} Blueside Digital. All rights reserved.</footer>
     </div>
   );
 }

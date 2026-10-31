@@ -237,6 +237,7 @@ export default function ContactPage() {
           </form>
         )}
       </div>
+      <footer className="page-footer">© {new Date().getFullYear()} Blueside Digital. All rights reserved.</footer>
     </div>
   );
 }

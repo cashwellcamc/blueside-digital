@@ -73,6 +73,7 @@ export default function LoginPage() {
           ← Back home
         </Link>
       </div>
+      <footer className="page-footer">© {new Date().getFullYear()} Blueside Digital. All rights reserved.</footer>
     </div>
   );
 }
