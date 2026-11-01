@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo, Fragment } from 'react';
 
 const TOPIC_MAP = {
   'Accessibility':          ['accessibility', 'wcag', 'ada', '508', 'section-508', 'trusted tester', 'hhs', 'ux access', 'semantic html', 'audit'],
@@ -43,11 +43,30 @@ export default function BlogPage() {
   const [highlightedIdx, setHighlightedIdx] = useState(-1);
   const inputRef = useRef(null);
 
-  // Show all options when nothing is typed or a topic is already selected (not mid-search)
-  const matchedTopics = TOPICS.filter(t => {
-    if (!inputValue || inputValue === topic) return true;
-    return t.toLowerCase().includes(inputValue.toLowerCase());
-  });
+  // Unique raw tags from loaded articles, excluding anything that's already a category name
+  const allTags = useMemo(() => {
+    const catKeys = new Set(TOPICS.map(t => t.toLowerCase()));
+    const seen = new Set();
+    const out = [];
+    articles.forEach(a => {
+      (a.tags || []).forEach(raw => {
+        const key = raw.trim().toLowerCase();
+        if (!seen.has(key) && !catKeys.has(key)) { seen.add(key); out.push(raw.trim()); }
+      });
+    });
+    return out.sort((a, b) => a.localeCompare(b));
+  }, [articles]);
+
+  // When empty / selected: show categories only. When typing: match categories + raw tags.
+  const suggestions = useMemo(() => {
+    if (!inputValue || inputValue === topic) {
+      return TOPICS.map(t => ({ label: t, kind: 'category' }));
+    }
+    const q = inputValue.toLowerCase();
+    const cats = TOPICS.filter(t => t.toLowerCase().includes(q)).map(t => ({ label: t, kind: 'category' }));
+    const tags = allTags.filter(t => t.toLowerCase().includes(q)).slice(0, 10).map(t => ({ label: t, kind: 'tag' }));
+    return [...cats, ...tags];
+  }, [inputValue, topic, allTags]);
 
   function selectTopic(t) {
     setTopic(t);
@@ -83,12 +102,12 @@ export default function BlogPage() {
     if (!dropdownOpen) { if (e.key === 'ArrowDown') setDropdownOpen(true); return; }
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setHighlightedIdx(i => Math.min(i + 1, matchedTopics.length - 1));
+      setHighlightedIdx(i => Math.min(i + 1, suggestions.length - 1));
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       setHighlightedIdx(i => Math.max(i - 1, 0));
     } else if (e.key === 'Enter') {
-      if (highlightedIdx >= 0 && matchedTopics[highlightedIdx]) selectTopic(matchedTopics[highlightedIdx]);
+      if (highlightedIdx >= 0 && suggestions[highlightedIdx]) selectTopic(suggestions[highlightedIdx].label);
     } else if (e.key === 'Escape') {
       setDropdownOpen(false);
     }
@@ -112,7 +131,10 @@ export default function BlogPage() {
   });
 
   const filtered = topic
-    ? sorted.filter(a => tagMatchesTopic(a.tags, topic))
+    ? sorted.filter(a => {
+        if (TOPICS.includes(topic)) return tagMatchesTopic(a.tags, topic);
+        return (a.tags || []).some(t => t.toLowerCase().includes(topic.toLowerCase()));
+      })
     : sorted;
 
   return (
@@ -179,19 +201,26 @@ export default function BlogPage() {
                     >×</button>
                   )}
                 </div>
-                {dropdownOpen && matchedTopics.length > 0 && (
+                {dropdownOpen && suggestions.length > 0 && (
                   <ul id="blog-topic-list" className="blog-topic-dropdown" role="listbox" aria-label="Topics">
-                    {matchedTopics.map((t, i) => (
-                      <li
-                        key={t}
-                        role="option"
-                        aria-selected={topic === t}
-                        className={`blog-topic-option${i === highlightedIdx ? ' highlighted' : ''}${topic === t ? ' selected' : ''}`}
-                        onMouseDown={(e) => { e.preventDefault(); selectTopic(t); }}
-                      >
-                        {t}
-                      </li>
-                    ))}
+                    {suggestions.map((s, i) => {
+                      const showDivider = s.kind === 'tag' && (i === 0 || suggestions[i - 1].kind === 'category');
+                      return (
+                        <Fragment key={s.label}>
+                          {showDivider && (
+                            <li className="blog-topic-group" role="presentation" aria-hidden="true">Tags</li>
+                          )}
+                          <li
+                            role="option"
+                            aria-selected={topic === s.label}
+                            className={`blog-topic-option${i === highlightedIdx ? ' highlighted' : ''}${topic === s.label ? ' selected' : ''}`}
+                            onMouseDown={(e) => { e.preventDefault(); selectTopic(s.label); }}
+                          >
+                            {s.label}
+                          </li>
+                        </Fragment>
+                      );
+                    })}
                   </ul>
                 )}
               </div>
