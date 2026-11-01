@@ -142,10 +142,11 @@ export default function BlogPage() {
     <div className="blog-shell">
       <header className="blog-header">
         <Link to="/" className="blog-back">&#8592; Back</Link>
-        <div className="blog-wordmark">
-          <BrandLogo small />
-          <h1 className="blog-wordmark-sub">Articles &amp; Insights</h1>
-        </div>
+          <div className="blog-header-brand">
+            <BrandLogo small />
+            <span className="blog-header-divider" aria-hidden="true" />
+            <h1 className="blog-header-title">Articles &amp; Insights</h1>
+          </div>
       </header>
 
       <main className="blog-main">

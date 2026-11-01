@@ -8,7 +8,6 @@ export default function BrandLogo({ small = false, asDiv = false }) {
       <span className="blueside-wordmark">
         <span className="blueside-blue">blue</span><span className="blueside-side">side</span>
       </span>
-      <span className="blueside-descriptor">DIGITAL</span>
     </Tag>
   );
 }

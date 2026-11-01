@@ -176,9 +176,10 @@ export default function ArticlePage() {
     <div className="blog-shell">
       <header className="blog-header">
         <Link to="/blog" className="blog-back">&#8592; Articles</Link>
-        <div className="blog-wordmark">
+        <div className="blog-header-brand">
           <BrandLogo small />
-          <span className="blog-wordmark-sub">Articles &amp; Insights</span>
+          <span className="blog-header-divider" aria-hidden="true" />
+          <span className="blog-header-title">Articles &amp; Insights</span>
         </div>
       </header>
 
