@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 import LeftPanel from './components/LeftPanel';
 import RightPanel from './components/RightPanel';
 import BlogPage from './pages/BlogPage';
@@ -33,7 +33,18 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
       </Routes>
       <footer className="global-footer">
-        © {new Date().getFullYear()} Blueside Digital. All rights reserved.
+        <nav className="global-footer-nav" aria-label="Footer navigation">
+          {[
+            { to: '/blog',          label: 'Blog' },
+            { to: '/about',         label: 'CV' },
+            { to: '/portfolio',     label: 'Portfolio' },
+            { to: '/case-studies',  label: 'Case Studies' },
+            { to: '/contact',       label: 'Contact' },
+          ].map(({ to, label }) => (
+            <Link key={to} to={to} className="global-footer-link">{label}</Link>
+          ))}
+        </nav>
+        <p className="global-footer-copy">© {new Date().getFullYear()} Blueside Digital. All rights reserved.</p>
       </footer>
     </>
   );

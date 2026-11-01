@@ -479,10 +479,40 @@ html, body {
 /* ─── GLOBAL FOOTER ────────────────────────────── */
 .global-footer {
   background: #111111;
-  color: rgba(255, 255, 255, 0.5);
   text-align: center;
-  padding: 1.1rem 2rem;
-  font-size: 0.67rem;
+  padding: 1.4rem 2rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.global-footer-nav {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.global-footer-link {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 0 0.85rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  transition: color 0.15s;
+}
+
+.global-footer-link:first-child { padding-left: 0; }
+.global-footer-link:last-child  { padding-right: 0; border-right: none; }
+
+.global-footer-link:hover { color: rgba(255, 255, 255, 0.95); }
+
+.global-footer-copy {
+  font-size: 0.64rem;
   font-weight: 400;
   letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.28);
 }
