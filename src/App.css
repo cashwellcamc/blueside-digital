@@ -478,10 +478,8 @@ html, body {
 
 /* ─── GLOBAL FOOTER ────────────────────────────── */
 .global-footer {
-  background-color: rgba(194, 205, 214, 0.55);
-  background-image: radial-gradient(circle, rgba(13, 61, 107, 0.28) 1px, transparent 1px);
-  background-size: 14px 14px;
-  color: rgba(13, 61, 107, 0.55);
+  background: #111111;
+  color: rgba(255, 255, 255, 0.5);
   text-align: center;
   padding: 1.1rem 2rem;
   font-size: 0.67rem;
