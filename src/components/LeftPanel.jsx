@@ -1,14 +1,11 @@
 import { Link } from 'react-router-dom';
+import BrandLogo from './BrandLogo';
 
 export default function LeftPanel() {
   return (
     <div className="left" role="banner">
       <div className="wordmark">
-        <h1 className="wordmark-main">
-          Blue<span>side</span>
-          <br />
-          Digital
-        </h1>
+        <BrandLogo />
         <div className="wordmark-sub">Independent Consulting</div>
       </div>
 

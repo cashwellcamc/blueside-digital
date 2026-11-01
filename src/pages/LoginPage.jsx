@@ -1,3 +1,4 @@
+import BrandLogo from '../components/BrandLogo';
 import { Link } from 'react-router-dom';
 
 export default function LoginPage() {
@@ -11,17 +12,8 @@ export default function LoginPage() {
       justifyContent: 'center',
       fontFamily: "'Inter', sans-serif",
     }}>
-      <div style={{ textAlign: 'center', maxWidth: '480px', padding: '2rem' }}>
-        <div style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: '2rem',
-          fontWeight: 700,
-          color: 'var(--ink)',
-          letterSpacing: '-0.02em',
-          marginBottom: '0.3rem',
-        }}>
-          Blue<span style={{ color: 'var(--blue-light)' }}>side</span> Digital
-        </div>
+      <div style={{ textAlign: 'center', maxWidth: '480px', padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <BrandLogo />
         <div style={{
           fontSize: '0.62rem',
           fontWeight: 500,
@@ -30,6 +22,7 @@ export default function LoginPage() {
           color: 'var(--blue-mid)',
           opacity: 0.65,
           marginBottom: '3rem',
+          marginTop: '0.5rem',
         }}>
           Client Portal
         </div>

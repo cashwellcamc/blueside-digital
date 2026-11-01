@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import BrandLogo from '../components/BrandLogo';
 import './AboutPage.css';
 
 const TIMELINE = [
@@ -223,7 +224,7 @@ export default function AboutPage() {
       <header className="blog-header">
         <Link to="/" className="blog-back">&#8592; Back</Link>
         <div className="blog-wordmark">
-          <span className="blog-wordmark-main" aria-hidden="true">Blue<span>side</span> Digital</span>
+          <BrandLogo small />
           <h1 className="blog-wordmark-sub">About</h1>
         </div>
       </header>

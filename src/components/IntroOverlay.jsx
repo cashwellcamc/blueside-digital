@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import BrandLogo from './BrandLogo';
 
 export default function IntroOverlay({ onDone }) {
   const [phase, setPhase] = useState('enter');
@@ -17,11 +18,7 @@ export default function IntroOverlay({ onDone }) {
       {/* Full-screen white with centered Blueside Digital logo */}
       <div className={`intro-white intro-${phase}`}>
         <div className="intro-logo">
-          <div className="wordmark-main">
-            Blue<span>side</span>
-            <br />
-            Digital
-          </div>
+          <BrandLogo asDiv />
           <div className="wordmark-sub">Independent Consulting</div>
         </div>
       </div>

@@ -19,6 +19,7 @@ function tagMatchesTopic(tags, topicKey) {
   );
 }
 import { Link } from 'react-router-dom';
+import BrandLogo from '../components/BrandLogo';
 import { client, ARTICLES_QUERY } from '../lib/sanity.js';
 import './BlogPage.css';
 
@@ -142,7 +143,7 @@ export default function BlogPage() {
       <header className="blog-header">
         <Link to="/" className="blog-back">&#8592; Back</Link>
         <div className="blog-wordmark">
-          <span className="blog-wordmark-main" aria-hidden="true">Blue<span>side</span> Digital</span>
+          <BrandLogo small />
           <h1 className="blog-wordmark-sub">Articles &amp; Insights</h1>
         </div>
       </header>

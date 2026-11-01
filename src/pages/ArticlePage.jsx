@@ -1,3 +1,4 @@
+import BrandLogo from '../components/BrandLogo';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { PortableText } from '@portabletext/react';
@@ -176,7 +177,7 @@ export default function ArticlePage() {
       <header className="blog-header">
         <Link to="/blog" className="blog-back">&#8592; Articles</Link>
         <div className="blog-wordmark">
-          <span className="blog-wordmark-main">Blue<span>side</span> Digital</span>
+          <BrandLogo small />
           <span className="blog-wordmark-sub">Articles &amp; Insights</span>
         </div>
       </header>

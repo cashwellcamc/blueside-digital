@@ -1,3 +1,4 @@
+import BrandLogo from '../components/BrandLogo';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './ContactPage.css';
@@ -83,7 +84,7 @@ export default function ContactPage() {
       {/* ── LEFT PANEL ── */}
       <div className="contact-left">
         <div className="wordmark">
-          <div className="wordmark-main">Blue<span>side</span><br />Digital</div>
+          <BrandLogo />
           <div className="wordmark-sub">Independent Consulting</div>
         </div>
 

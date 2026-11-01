@@ -476,6 +476,62 @@ html, body {
   .tech-item svg        { width: 1.5rem; height: 1.5rem; }
 }
 
+/* ─── BLUESIDE DIGITAL BRAND ──────────────────── */
+.blueside-logo {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-decoration: none;
+  width: fit-content;
+  gap: 3px;
+}
+
+.blueside-wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-size: clamp(38px, 4vw, 58px);
+  font-weight: 750;
+  letter-spacing: -0.075em;
+  line-height: 0.95;
+  white-space: nowrap;
+}
+
+.blueside-blue { color: #102b50; }
+.blueside-side { color: #1769dc; margin-left: 0.015em; }
+
+.blueside-descriptor {
+  display: block;
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.52em;
+  color: #718096;
+  padding-left: 0.35em;
+  line-height: 1.8;
+}
+
+.blueside-logo:hover .blueside-side {
+  color: #3489f5;
+  transition: color 180ms ease;
+}
+
+/* Small variant for page headers */
+.blueside-logo--sm .blueside-wordmark {
+  font-size: 1.5rem;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+.blueside-logo--sm .blueside-descriptor {
+  font-size: 0.5rem;
+  letter-spacing: 0.26em;
+  line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blueside-logo * { transition: none !important; }
+}
+
 /* ─── GLOBAL FOOTER ────────────────────────────── */
 .global-footer {
   background: #111111;
