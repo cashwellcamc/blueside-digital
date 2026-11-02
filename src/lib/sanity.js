@@ -51,3 +51,31 @@ export const ARTICLE_BY_SLUG_QUERY = `
     viewCount,
   }
 `;
+
+export const RELATED_ARTICLES_QUERY = `
+  *[_type == "article" && status == "published" && slug.current != $slug && count(tags[@ in $tags]) > 0]
+  | order(publishedAt desc)[0...3] {
+    _id,
+    title,
+    "slug": slug.current,
+    publishedAt,
+    "previewImage": previewImage.asset->url,
+    "mainImage": mainImage.asset->url,
+    tags,
+    viewCount,
+  }
+`;
+
+export const LATEST_ARTICLES_QUERY = `
+  *[_type == "article" && status == "published" && slug.current != $slug]
+  | order(publishedAt desc)[0...3] {
+    _id,
+    title,
+    "slug": slug.current,
+    publishedAt,
+    "previewImage": previewImage.asset->url,
+    "mainImage": mainImage.asset->url,
+    tags,
+    viewCount,
+  }
+`;

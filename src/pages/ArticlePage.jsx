@@ -1,12 +1,12 @@
 import BrandLogo from '../components/BrandLogo';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { PortableText } from '@portabletext/react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { client, writeClient, ARTICLE_BY_SLUG_QUERY, imgUrl } from '../lib/sanity.js';
+import { client, writeClient, ARTICLE_BY_SLUG_QUERY, RELATED_ARTICLES_QUERY, LATEST_ARTICLES_QUERY, imgUrl } from '../lib/sanity.js';
+import { TOPIC_STYLES, TOPIC_STYLE_DEFAULT, getPrimaryTopic } from '../lib/topics.js';
 import './BlogPage.css';
-
 
 const LANG_LABELS = {
   javascript: 'JavaScript', typescript: 'TypeScript', jsx: 'JSX', tsx: 'TSX',
@@ -20,8 +20,6 @@ function setMeta(selector, attr, value) {
   let el = document.querySelector(selector);
   if (!el) {
     el = document.createElement('meta');
-    // extract the identifying attribute from the selector and set it on the new element
-    // e.g. 'meta[property="og:image"]' → sets property="og:image" before appending
     const match = selector.match(/\[(\w[\w:.-]*)=["']([^"']+)["']\]/);
     if (match) el.setAttribute(match[1], match[2]);
     document.head.appendChild(el);
@@ -35,10 +33,18 @@ function sanityTwitterImg(url) {
   return `${base}?w=1200&h=630&fit=crop&auto=format&fm=jpg`;
 }
 
+function slugify(text) {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
 const ptComponents = {
   block: {
     normal: ({ children }) => <p>{children}</p>,
-    h3:     ({ children }) => <h3>{children}</h3>,
+    h2: ({ children, value }) => {
+      const text = value.children?.map(c => c.text).join('') || '';
+      return <h2 id={slugify(text)}>{children}</h2>;
+    },
+    h3: ({ children }) => <h3>{children}</h3>,
   },
   list: {
     bullet: ({ children }) => <ul className="blog-list blog-list--bullet">{children}</ul>,
@@ -53,9 +59,7 @@ const ptComponents = {
     em:     ({ children }) => <em>{children}</em>,
     code:   ({ children }) => <code className="blog-inline-code">{children}</code>,
     link:   ({ value, children }) => (
-      <a href={value.href} target="_blank" rel="noreferrer noopener">
-        {children}
-      </a>
+      <a href={value.href} target="_blank" rel="noreferrer noopener">{children}</a>
     ),
   },
   types: {
@@ -65,9 +69,7 @@ const ptComponents = {
     code: ({ value }) => (
       <div className="blog-code-block">
         <div className="blog-code-header">
-          <span className="blog-code-dots">
-            <span /><span /><span />
-          </span>
+          <span className="blog-code-dots"><span /><span /><span /></span>
           <span className="blog-code-lang">
             {value.filename || LANG_LABELS[value.language] || value.language || 'Code'}
           </span>
@@ -75,13 +77,7 @@ const ptComponents = {
         <SyntaxHighlighter
           language={value.language || 'text'}
           style={vscDarkPlus}
-          customStyle={{
-            margin: 0,
-            borderRadius: '0 0 10px 10px',
-            fontSize: '0.84rem',
-            lineHeight: '1.65',
-            padding: '1.2rem 1.4rem',
-          }}
+          customStyle={{ margin: 0, borderRadius: '0 0 10px 10px', fontSize: '0.84rem', lineHeight: '1.65', padding: '1.2rem 1.4rem' }}
           showLineNumbers={value.code?.split('\n').length > 4}
           lineNumberStyle={{ opacity: 0.35, userSelect: 'none', minWidth: '2.5em' }}
         >
@@ -104,6 +100,22 @@ const LinkedInIcon = () => (
   </svg>
 );
 
+const AvatarIcon = ({ size = 36 }) => (
+  <svg width={size} height={size} viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+    <defs>
+      <clipPath id={`av-clip-${size}`}>
+        <rect width="200" height="200" rx="44" ry="44"/>
+      </clipPath>
+    </defs>
+    <g clipPath={`url(#av-clip-${size})`}>
+      <rect width="100" height="200" fill="#ffffff"/>
+      <rect x="100" width="100" height="200" fill="#1769dc"/>
+      <text x="50" y="100" textAnchor="middle" dominantBaseline="middle" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="34" fill="#102b50">blue</text>
+      <text x="150" y="100" textAnchor="middle" dominantBaseline="middle" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="34" fill="#ffffff">side</text>
+    </g>
+  </svg>
+);
+
 function buildShareUrl(platform, title, slug) {
   const url  = encodeURIComponent(`${SITE}/blog/${slug}`);
   const text = encodeURIComponent(title);
@@ -115,10 +127,61 @@ function openShare(href) {
   window.open(href, '_blank', 'width=600,height=420,noopener,noreferrer');
 }
 
+function RelatedCard({ article }) {
+  const cover = article.previewImage || article.mainImage;
+  const primaryTopic = getPrimaryTopic(article.tags);
+  const topicStyle = TOPIC_STYLES[primaryTopic] ?? TOPIC_STYLE_DEFAULT;
+  const label = primaryTopic || 'Article';
+  return (
+    <article className="related-card" aria-labelledby={`related-${article._id}`}>
+      <div className="related-card-cover" aria-hidden="true">
+        {cover ? (
+          <>
+            <img src={imgUrl(cover, { w: 600 })} alt="" loading="lazy" decoding="async" />
+            <div className="related-card-overlay" style={{ '--card-accent': topicStyle.accent }}>
+              <span className="related-card-label">{label}</span>
+            </div>
+          </>
+        ) : (
+          <div className="related-card-typo" style={{ '--card-accent': topicStyle.accent }}>
+            <span className="related-card-label">{label}</span>
+          </div>
+        )}
+      </div>
+      <div className="related-card-body">
+        {article.publishedAt && (
+          <time className="blog-article-date" dateTime={article.publishedAt}>
+            {new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+          </time>
+        )}
+        <h3 id={`related-${article._id}`} className="related-card-title">
+          <Link to={`/blog/${article.slug}`} className="related-card-link">{article.title}</Link>
+        </h3>
+      </div>
+    </article>
+  );
+}
+
 export default function ArticlePage() {
   const { slug } = useParams();
-  const [article, setArticle] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [article, setArticle]   = useState(null);
+  const [loading, setLoading]   = useState(true);
+  const [related, setRelated]   = useState([]);
+  const [progress, setProgress] = useState(0);
+  const [activeId, setActiveId] = useState('');
+
+  // Reading progress bar
+  useEffect(() => {
+    function onScroll() {
+      const el = document.documentElement;
+      const total = el.scrollHeight - el.clientHeight;
+      setProgress(total > 0 ? (el.scrollTop / total) * 100 : 0);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Fetch article + increment view count
   useEffect(() => {
     client.fetch(ARTICLE_BY_SLUG_QUERY, { slug })
       .then(data => {
@@ -131,9 +194,25 @@ export default function ArticlePage() {
       .catch(() => setLoading(false));
   }, [slug]);
 
+  // Fetch related articles after main article loads
   useEffect(() => {
     if (!article) return;
+    const tags = article.tags || [];
+    if (tags.length === 0) {
+      client.fetch(LATEST_ARTICLES_QUERY, { slug }).then(setRelated).catch(() => {});
+      return;
+    }
+    client.fetch(RELATED_ARTICLES_QUERY, { slug, tags })
+      .then(data => {
+        if (data.length > 0) { setRelated(data); return; }
+        client.fetch(LATEST_ARTICLES_QUERY, { slug }).then(setRelated).catch(() => {});
+      })
+      .catch(() => {});
+  }, [article, slug]);
 
+  // SEO meta
+  useEffect(() => {
+    if (!article) return;
     const url   = `${SITE}/blog/${article.slug}`;
     const title = `${article.title} | Blueside Digital`;
     const desc  = article.body
@@ -142,7 +221,6 @@ export default function ArticlePage() {
       : '';
 
     document.title = title;
-
     setMeta('meta[name="description"]',          'content', desc);
     setMeta('meta[property="og:title"]',         'content', title);
     setMeta('meta[property="og:description"]',   'content', desc);
@@ -153,28 +231,86 @@ export default function ArticlePage() {
     if (article.publishedAt) {
       setMeta('meta[property="article:published_time"]', 'content', article.publishedAt);
     }
-    const imgUrl = sanityTwitterImg(article.mainImage);
-    if (imgUrl) {
-      setMeta('meta[property="og:image"]',          'content', imgUrl);
-      setMeta('meta[property="og:image:width"]',    'content', '1200');
-      setMeta('meta[property="og:image:height"]',   'content', '630');
-      setMeta('meta[name="twitter:image"]',         'content', imgUrl);
-      setMeta('meta[name="twitter:card"]',          'content', 'summary_large_image');
+    const ogImg = sanityTwitterImg(article.mainImage);
+    if (ogImg) {
+      setMeta('meta[property="og:image"]',       'content', ogImg);
+      setMeta('meta[property="og:image:width"]', 'content', '1200');
+      setMeta('meta[property="og:image:height"]','content', '630');
+      setMeta('meta[name="twitter:image"]',      'content', ogImg);
+      setMeta('meta[name="twitter:card"]',       'content', 'summary_large_image');
     }
-
     return () => {
       document.title = 'Blueside Digital | WCAG & ADA Accessibility Consulting';
-      setMeta('meta[name="description"]',          'content', 'Senior-level digital consulting specializing in WCAG 2.1 AA audits, Section 504/508 compliance, and ADA accessibility for healthcare organizations.');
-      setMeta('meta[property="og:title"]',         'content', 'Blueside Digital | WCAG & ADA Accessibility Consulting');
-      setMeta('meta[property="og:description"]',   'content', 'Senior-level digital consulting specializing in WCAG 2.1 AA audits, Section 504/508 compliance, and ADA accessibility for healthcare organizations.');
-      setMeta('meta[property="og:url"]',           'content', `${SITE}/`);
-      setMeta('meta[property="og:type"]',          'content', 'website');
-      setMeta('meta[name="twitter:card"]',         'content', 'summary');
+      setMeta('meta[name="description"]',        'content', 'Senior-level digital consulting specializing in WCAG 2.1 AA audits, Section 504/508 compliance, and ADA accessibility for healthcare organizations.');
+      setMeta('meta[property="og:title"]',       'content', 'Blueside Digital | WCAG & ADA Accessibility Consulting');
+      setMeta('meta[property="og:description"]', 'content', 'Senior-level digital consulting specializing in WCAG 2.1 AA audits, Section 504/508 compliance, and ADA accessibility for healthcare organizations.');
+      setMeta('meta[property="og:url"]',         'content', `${SITE}/`);
+      setMeta('meta[property="og:type"]',        'content', 'website');
+      setMeta('meta[name="twitter:card"]',       'content', 'summary');
     };
   }, [article]);
 
+  // Extract H2 headings for ToC
+  const tocHeadings = useMemo(() => {
+    if (!article?.body) return [];
+    return article.body
+      .filter(b => b._type === 'block' && b.style === 'h2')
+      .map(b => {
+        const text = b.children?.map(c => c.text).join('') || '';
+        return { text, id: slugify(text) };
+      })
+      .filter(h => h.text);
+  }, [article]);
+
+  // IntersectionObserver for ToC active state
+  useEffect(() => {
+    if (tocHeadings.length < 3) return;
+    const observer = new IntersectionObserver(
+      entries => {
+        const visible = entries.filter(e => e.isIntersecting);
+        if (visible.length > 0) setActiveId(visible[0].target.id);
+      },
+      { rootMargin: '-10% 0% -80% 0%', threshold: 0 }
+    );
+    tocHeadings.forEach(h => {
+      const el = document.getElementById(h.id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, [tocHeadings]);
+
+  // Reading time
+  const readingTime = useMemo(() => {
+    if (!article?.body) return null;
+    const words = article.body
+      .filter(b => b._type === 'block' && b.children)
+      .flatMap(b => b.children.map(c => c.text))
+      .join(' ')
+      .split(/\s+/).filter(Boolean).length;
+    return Math.max(1, Math.ceil(words / 200));
+  }, [article]);
+
+  const primaryTopic  = useMemo(() => getPrimaryTopic(article?.tags), [article]);
+  const topicStyle    = TOPIC_STYLES[primaryTopic] ?? TOPIC_STYLE_DEFAULT;
+  const hasToc        = tocHeadings.length >= 3;
+
+  const formattedDate = article?.publishedAt
+    ? new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+    : null;
+
   return (
     <div className="blog-shell">
+      {/* Reading progress bar */}
+      <div
+        className="article-progress"
+        role="progressbar"
+        aria-hidden="true"
+        aria-valuenow={Math.round(progress)}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        style={{ '--progress': `${progress}%` }}
+      />
+
       <header className="blog-header">
         <Link to="/blog" className="blog-back">&#8592; Articles</Link>
         <div className="blog-header-brand">
@@ -193,62 +329,124 @@ export default function ArticlePage() {
 
         {article && (
           <article className="blog-article" aria-labelledby="article-title">
-            <div className="article-content">
-              <div className="blog-article-meta">
-                {article.publishedAt && (
-                  <time className="blog-article-date" dateTime={article.publishedAt}>
-                    {new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-                  </time>
-                )}
-              </div>
 
-              <h1 id="article-title" className="blog-article-title">{article.title}</h1>
+            {/* ToC + content grid */}
+            <div className={`article-outer-grid${hasToc ? ' article-outer-grid--toc' : ''}`}>
 
-              {article.mainImage && (
-                <div className="blog-article-image">
-                  <img src={imgUrl(article.mainImage, { w: 1400 })} alt={article.title} decoding="async" />
-                </div>
+              {/* ToC: ≥1400px, ≥3 H2s */}
+              {hasToc && (
+                <nav className="article-toc" aria-label="On this page">
+                  <p className="article-toc-heading">On this page</p>
+                  <ul className="article-toc-list">
+                    {tocHeadings.map(h => (
+                      <li key={h.id}>
+                        <a
+                          href={`#${h.id}`}
+                          className={`article-toc-link${activeId === h.id ? ' active' : ''}`}
+                        >
+                          {h.text}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
               )}
 
-              <div className="blog-share" role="group" aria-label="Share this article">
-                <span className="blog-share-label" aria-hidden="true">Share</span>
-                <button
-                  type="button"
-                  className="blog-share-btn blog-share-btn--x"
-                  onClick={() => openShare(buildShareUrl('x', article.title, article.slug))}
-                  aria-label="Share on X (Twitter)"
-                >
-                  <XIcon /> X
-                </button>
-                <button
-                  type="button"
-                  className="blog-share-btn blog-share-btn--li"
-                  onClick={() => openShare(buildShareUrl('linkedin', article.title, article.slug))}
-                  aria-label="Share on LinkedIn"
-                >
-                  <LinkedInIcon /> LinkedIn
-                </button>
-              </div>
+              <div className="article-content">
+                <h1 id="article-title" className="blog-article-title">{article.title}</h1>
 
-              <div className="blog-article-body">
-                {article.body && <PortableText value={article.body} components={ptComponents} />}
-                {article.tags?.length > 0 && (
-                  <p className="blog-tags">{article.tags.map(t => `#${t}`).join(' ')}</p>
-                )}
-              </div>
-
-              <div className="blog-byline">
-                <div className="blog-byline-content">
-                  <div className="blog-byline-name">Cameron Cashwell</div>
-                  <p className="blog-byline-bio">
-                    Blueside Digital is an independent consulting practice specializing in web accessibility,
-                    WCAG 2.1 AA audits, Section 504/508 compliance, and full-stack digital work for healthcare,
-                    pharma, and federal organizations. 13+ years of senior-level experience.
-                  </p>
+                {/* Byline row */}
+                <div className="article-byline-row">
+                  <div className="article-byline-left">
+                    <span className="article-byline-meta">
+                      {formattedDate && (
+                        <time dateTime={article.publishedAt}>{formattedDate}</time>
+                      )}
+                      {formattedDate && readingTime && <span className="article-byline-dot" aria-hidden="true">·</span>}
+                      {readingTime && <span>{readingTime} min read</span>}
+                      {(formattedDate || readingTime) && primaryTopic && <span className="article-byline-dot" aria-hidden="true">·</span>}
+                      {primaryTopic && (
+                        <span className="article-topic-pill" style={{ '--pill-color': topicStyle.accent }}>
+                          {primaryTopic}
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                  <div className="article-byline-share" role="group" aria-label="Share this article">
+                    <button
+                      type="button"
+                      className="blog-share-btn blog-share-btn--x"
+                      onClick={() => openShare(buildShareUrl('x', article.title, article.slug))}
+                      aria-label="Share on X (Twitter)"
+                    >
+                      <XIcon /> X
+                    </button>
+                    <button
+                      type="button"
+                      className="blog-share-btn blog-share-btn--li"
+                      onClick={() => openShare(buildShareUrl('linkedin', article.title, article.slug))}
+                      aria-label="Share on LinkedIn"
+                    >
+                      <LinkedInIcon /> LinkedIn
+                    </button>
+                  </div>
                 </div>
-                <Link className="blog-byline-cta" to="/contact">Get in touch <span aria-hidden="true">→</span></Link>
+                <div className="article-byline-divider" aria-hidden="true" />
+
+                {/* Hero image */}
+                {article.mainImage && (
+                  <div className="blog-article-image">
+                    <img src={imgUrl(article.mainImage, { w: 1400 })} alt="" decoding="async" />
+                  </div>
+                )}
+
+                <div className="blog-article-body">
+                  {article.body && <PortableText value={article.body} components={ptComponents} />}
+                  {article.tags?.length > 0 && (
+                    <p className="blog-tags">{article.tags.map(t => `#${t}`).join(' ')}</p>
+                  )}
+                </div>
               </div>
             </div>
+
+            {/* Article footer */}
+            <footer className="article-footer">
+              <div className="article-footer-inner">
+
+                {/* Author bio */}
+                <div className="article-footer-bio">
+                  <div className="article-footer-bio-text">
+                    <p className="article-footer-bio-name">Cameron Cashwell</p>
+                    <p className="article-footer-bio-desc">
+                      Independent digital consultant specializing in WCAG 2.1 AA accessibility, Section 504/508 compliance,
+                      and full-stack web development for healthcare, pharma, and federal organizations.
+                    </p>
+                    <Link to="/contact" className="article-footer-bio-link">Get in touch →</Link>
+                  </div>
+                </div>
+
+                {/* Topic CTA */}
+                {primaryTopic && (
+                  <div className="article-footer-cta">
+                    <p className="article-footer-cta-text">
+                      Need help with <strong>{primaryTopic}</strong>?
+                    </p>
+                    <Link to="/contact" className="article-footer-cta-btn">Let's work together →</Link>
+                  </div>
+                )}
+
+                {/* Related articles */}
+                {related.length > 0 && (
+                  <div className="article-footer-related">
+                    <h2 className="article-footer-related-title">More articles</h2>
+                    <div className="article-footer-related-grid">
+                      {related.map(a => <RelatedCard key={a._id} article={a} />)}
+                    </div>
+                  </div>
+                )}
+
+              </div>
+            </footer>
           </article>
         )}
       </main>
