@@ -56,7 +56,7 @@ export default function PortfolioPage() {
 
               <div className="pf-thumb" role="img" aria-label={thumbAlt}>
                 {thumb
-                  ? <img src={thumb} alt={thumbAlt} />
+                  ? <img src={thumb} alt={thumbAlt} decoding="async" />
                   : <span className="pf-thumb-placeholder" aria-hidden="true" />
                 }
               </div>

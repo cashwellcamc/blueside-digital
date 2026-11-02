@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { PortableText } from '@portabletext/react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { client, writeClient, ARTICLE_BY_SLUG_QUERY } from '../lib/sanity.js';
+import { client, writeClient, ARTICLE_BY_SLUG_QUERY, imgUrl } from '../lib/sanity.js';
 import './BlogPage.css';
 
 
@@ -31,7 +31,8 @@ function setMeta(selector, attr, value) {
 
 function sanityTwitterImg(url) {
   if (!url) return null;
-  return `${url}?w=1200&h=630&fit=crop&auto=format&fm=jpg`;
+  const base = url.split('?')[0];
+  return `${base}?w=1200&h=630&fit=crop&auto=format&fm=jpg`;
 }
 
 const ptComponents = {
@@ -192,68 +193,60 @@ export default function ArticlePage() {
 
         {article && (
           <article className="blog-article" aria-labelledby="article-title">
-            <div className="blog-article-meta">
-              {article.publishedAt && (
-                <time className="blog-article-date" dateTime={article.publishedAt}>
-                  {new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-                </time>
-              )}
-            </div>
-
-            <div className="article-chrome">
-              <div className="article-chrome-header" aria-hidden="true">
-                <span className="blog-code-dots">
-                  <span /><span /><span />
-                </span>
-                <span className="article-chrome-tab">{article.slug}.md</span>
-              </div>
-              <div className="article-chrome-body">
-                <h1 id="article-title" className="blog-article-title">{article.title}</h1>
-
-                {article.mainImage && (
-                  <div className="blog-article-image">
-                    <img src={article.mainImage} alt={article.title} />
-                  </div>
+            <div className="article-content">
+              <div className="blog-article-meta">
+                {article.publishedAt && (
+                  <time className="blog-article-date" dateTime={article.publishedAt}>
+                    {new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                  </time>
                 )}
+              </div>
 
-                <div className="blog-share" role="group" aria-label="Share this article">
-                  <span className="blog-share-label" aria-hidden="true">Share</span>
-                  <button
-                    type="button"
-                    className="blog-share-btn blog-share-btn--x"
-                    onClick={() => openShare(buildShareUrl('x', article.title, article.slug))}
-                    aria-label="Share on X (Twitter)"
-                  >
-                    <XIcon /> X
-                  </button>
-                  <button
-                    type="button"
-                    className="blog-share-btn blog-share-btn--li"
-                    onClick={() => openShare(buildShareUrl('linkedin', article.title, article.slug))}
-                    aria-label="Share on LinkedIn"
-                  >
-                    <LinkedInIcon /> LinkedIn
-                  </button>
-                </div>
+              <h1 id="article-title" className="blog-article-title">{article.title}</h1>
 
-                <div className="blog-article-body">
-                  {article.body && <PortableText value={article.body} components={ptComponents} />}
-                  {article.tags?.length > 0 && (
-                    <p className="blog-tags">{article.tags.map(t => `#${t}`).join(' ')}</p>
-                  )}
+              {article.mainImage && (
+                <div className="blog-article-image">
+                  <img src={imgUrl(article.mainImage, { w: 1400 })} alt={article.title} decoding="async" />
                 </div>
+              )}
 
-                <div className="blog-byline">
-                  <div className="blog-byline-content">
-                    <div className="blog-byline-name">Cameron Cashwell</div>
-                    <p className="blog-byline-bio">
-                      Blueside Digital is an independent consulting practice specializing in web accessibility,
-                      WCAG 2.1 AA audits, Section 504/508 compliance, and full-stack digital work for healthcare,
-                      pharma, and federal organizations. 13+ years of senior-level experience.
-                    </p>
-                  </div>
-                  <Link className="blog-byline-cta" to="/contact">Get in touch <span aria-hidden="true">→</span></Link>
+              <div className="blog-share" role="group" aria-label="Share this article">
+                <span className="blog-share-label" aria-hidden="true">Share</span>
+                <button
+                  type="button"
+                  className="blog-share-btn blog-share-btn--x"
+                  onClick={() => openShare(buildShareUrl('x', article.title, article.slug))}
+                  aria-label="Share on X (Twitter)"
+                >
+                  <XIcon /> X
+                </button>
+                <button
+                  type="button"
+                  className="blog-share-btn blog-share-btn--li"
+                  onClick={() => openShare(buildShareUrl('linkedin', article.title, article.slug))}
+                  aria-label="Share on LinkedIn"
+                >
+                  <LinkedInIcon /> LinkedIn
+                </button>
+              </div>
+
+              <div className="blog-article-body">
+                {article.body && <PortableText value={article.body} components={ptComponents} />}
+                {article.tags?.length > 0 && (
+                  <p className="blog-tags">{article.tags.map(t => `#${t}`).join(' ')}</p>
+                )}
+              </div>
+
+              <div className="blog-byline">
+                <div className="blog-byline-content">
+                  <div className="blog-byline-name">Cameron Cashwell</div>
+                  <p className="blog-byline-bio">
+                    Blueside Digital is an independent consulting practice specializing in web accessibility,
+                    WCAG 2.1 AA audits, Section 504/508 compliance, and full-stack digital work for healthcare,
+                    pharma, and federal organizations. 13+ years of senior-level experience.
+                  </p>
                 </div>
+                <Link className="blog-byline-cta" to="/contact">Get in touch <span aria-hidden="true">→</span></Link>
               </div>
             </div>
           </article>

@@ -490,10 +490,10 @@ html, body {
 .blueside-wordmark {
   display: inline-flex;
   align-items: baseline;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Playfair Display', serif;
   font-size: clamp(38px, 4vw, 58px);
-  font-weight: 750;
-  letter-spacing: -0.075em;
+  font-weight: 700;
+  letter-spacing: -0.03em;
   line-height: 0.95;
   white-space: nowrap;
 }
@@ -520,7 +520,7 @@ html, body {
 /* Small variant for page headers */
 .blueside-logo--sm .blueside-wordmark {
   font-size: 1.5rem;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.035em;
   line-height: 1;
 }
 .blueside-logo--sm .blueside-descriptor {

@@ -12,15 +12,31 @@ const TOPIC_MAP = {
 
 const TOPICS = Object.keys(TOPIC_MAP);
 
+const TOPIC_STYLES = {
+  'Accessibility':              { accent: '#4ade80' },
+  'AI':                         { accent: '#a78bfa' },
+  'Content Management Systems': { accent: '#60a5fa' },
+  'Healthcare & Pharma':        { accent: '#f472b6' },
+  'Security & Compliance':      { accent: '#f87171' },
+  'MarTech & Analytics':        { accent: '#34d399' },
+  'Web Development':            { accent: '#38bdf8' },
+};
+const TOPIC_STYLE_DEFAULT = { accent: '#1769dc' };
+
 function tagMatchesTopic(tags, topicKey) {
   const patterns = TOPIC_MAP[topicKey];
   return (tags || []).some(tag =>
     patterns.some(p => tag.toLowerCase().includes(p.toLowerCase()))
   );
 }
+
+function getPrimaryTopic(tags) {
+  return TOPICS.find(t => tagMatchesTopic(tags, t)) ?? null;
+}
+
 import { Link } from 'react-router-dom';
 import BrandLogo from '../components/BrandLogo';
-import { client, ARTICLES_QUERY } from '../lib/sanity.js';
+import { client, ARTICLES_QUERY, imgUrl } from '../lib/sanity.js';
 import './BlogPage.css';
 
 
@@ -242,30 +258,65 @@ export default function BlogPage() {
           <div className="blog-empty">No articles tagged &ldquo;{topic}&rdquo; yet.</div>
         )}
 
-        {filtered.map((article) => (
-          <article key={article._id} className="blog-article" aria-labelledby={`title-${article._id}`}>
-            <div className="blog-article-meta">
-              {article.publishedAt && (
-                <time className="blog-article-date" dateTime={article.publishedAt}>
-                  {new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-                </time>
-              )}
-              {article.viewCount > 0 && (
-                <span className="blog-article-views">{article.viewCount + 100} views</span>
-              )}
-            </div>
-            <Link to={`/blog/${article.slug}`} className="blog-article-title-link">
-              <h2 id={`title-${article._id}`} className="blog-article-title">{article.title}</h2>
-            </Link>
-            <div className="blog-article-bar" aria-hidden="true" />
-            <div className="blog-article-body">
-              <p className="blog-excerpt">{getExcerpt(article.body)}</p>
-              <Link to={`/blog/${article.slug}`} className="blog-read-more">
-                Read full article ↓
-              </Link>
-            </div>
-          </article>
-        ))}
+        {!loading && filtered.length > 0 && (
+          <div className="blog-grid">
+            {filtered.map((article) => {
+              const coverImage = article.previewImage || article.mainImage || null;
+              const primaryTopic = getPrimaryTopic(article.tags);
+              const topicStyle = TOPIC_STYLES[primaryTopic] ?? TOPIC_STYLE_DEFAULT;
+              const label = primaryTopic || 'Article';
+
+              return (
+                <article key={article._id} className="blog-card" aria-labelledby={`title-${article._id}`}>
+                  <div className="blog-card-cover" aria-hidden="true">
+                    {coverImage && (
+                      <img
+                        className="blog-card-img"
+                        src={imgUrl(coverImage, { w: 800 })}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        width="800"
+                        height="450"
+                      />
+                    )}
+                    {coverImage ? (
+                      <div className="blog-card-overlay" style={{ '--card-accent': topicStyle.accent }}>
+                        <span className="blog-card-overlay-panel" />
+                        <span className="blog-card-overlay-label">{label}</span>
+                        {primaryTopic && <span className="blog-card-overlay-cat">{primaryTopic}</span>}
+                        <span className="blog-card-overlay-cta">Read article →</span>
+                      </div>
+                    ) : (
+                      <div className="blog-card-typo" style={{ '--card-accent': topicStyle.accent }}>
+                        <span className="blog-card-typo-panel" />
+                        <span className="blog-card-typo-label">{label}</span>
+                        {primaryTopic && <span className="blog-card-typo-cat">{primaryTopic}</span>}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="blog-card-body">
+                    <div className="blog-card-meta">
+                      {article.publishedAt && (
+                        <time className="blog-article-date" dateTime={article.publishedAt}>
+                          {new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                        </time>
+                      )}
+                      {article.viewCount > 0 && (
+                        <span className="blog-article-views">{article.viewCount + 100} views</span>
+                      )}
+                    </div>
+                    <h2 id={`title-${article._id}`} className="blog-card-title">
+                      <Link to={`/blog/${article.slug}`} className="blog-card-link">{article.title}</Link>
+                    </h2>
+                    <p className="blog-card-excerpt">{getExcerpt(article.body)}</p>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
       </main>
     </div>
   );

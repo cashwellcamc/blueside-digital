@@ -19,12 +19,19 @@ export const writeClient = writeToken
     })
   : null;
 
+export function imgUrl(url, { w = 1200, q = 80 } = {}) {
+  if (!url) return null;
+  const base = url.split('?')[0];
+  return `${base}?w=${w}&auto=format&q=${q}`;
+}
+
 export const ARTICLES_QUERY = `
   *[_type == "article" && status == "published"] | order(publishedAt desc) {
     _id,
     title,
     "slug": slug.current,
     publishedAt,
+    "previewImage": previewImage.asset->url,
     "mainImage": mainImage.asset->url,
     body,
     tags,
