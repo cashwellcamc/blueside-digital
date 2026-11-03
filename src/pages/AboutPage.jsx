@@ -19,6 +19,20 @@ const TIMELINE = [
     ],
   },
   {
+    period: 'Aug 2026',
+    type: 'cert',
+    role: 'AWS Certified Developer – Associate',
+    org: 'Amazon Web Services (AWS)',
+    detail: 'Issued Aug 2026',
+  },
+  {
+    period: 'Jul 2026',
+    type: 'cert',
+    role: 'Trusted Tester for Web Certification v5',
+    org: 'U.S. Department of Homeland Security',
+    detail: 'Credential ID TT-2607-09343 · Issued Jul 2026',
+  },
+  {
     period: '2025 – 2026',
     type: 'work',
     role: 'Web Platforms Lead',
@@ -34,6 +48,14 @@ const TIMELINE = [
       'Optimized site load speeds, systematically resolved accumulated technical debt, and enhanced CRM integrations and reporting tools supporting clinical, marketing, and operational stakeholders.',
       'Rebuilt corporate Drupal CMS web property successfully with headless Payload CMS.',
     ],
+  },
+  {
+    period: 'Feb 2025',
+    type: 'cert',
+    role: 'Engage Technical Certification v5',
+    org: 'Veeva Systems',
+    detail: 'Issued Feb 2025 · Expired Feb 2026',
+    status: 'expired',
   },
   {
     period: '2021 – 2025',
@@ -113,6 +135,13 @@ const TIMELINE = [
     ],
   },
   {
+    period: 'Nov 2019',
+    type: 'clearance',
+    role: 'Public Trust Clearance',
+    org: 'Federal Aviation Administration',
+    detail: 'Issued Nov 2019',
+  },
+  {
     period: '2018',
     type: 'education',
     role: "Bachelor's in Web Technologies",
@@ -123,6 +152,14 @@ const TIMELINE = [
       activities: 'Honors',
       skills: 'Web Development',
     },
+  },
+  {
+    period: 'Apr 2017',
+    type: 'clearance',
+    role: 'Secret Clearance',
+    org: 'U.S. Department of Homeland Security',
+    detail: 'Issued Apr 2017',
+    status: 'inactive',
   },
   {
     period: '2011 – 2017',
@@ -241,7 +278,7 @@ export default function AboutPage() {
         </div>
 
         <div className="about-timeline" aria-label="Career timeline">
-          {TIMELINE.map(({ period, type, role, org, location, detail, intro, bullets, companies, eduDetail }, i) => {
+          {TIMELINE.map(({ period, type, role, org, location, detail, status, intro, bullets, companies, eduDetail }, i) => {
             const hasDetail = !!(intro || bullets?.length || companies?.length || eduDetail);
             const isOpen    = expanded.has(i);
 
@@ -259,12 +296,13 @@ export default function AboutPage() {
                       aria-controls={`tl-panel-${i}`}
                     >
                       <span className={`tl-type-badge tl-type-badge--${type}`}>
-                        {type === 'education' ? 'Education' : 'Experience'}
+                        {type === 'education' ? 'Education' : type === 'cert' ? 'Certification' : type === 'clearance' ? 'Clearance' : 'Experience'}
                       </span>
                       <span className="tl-role">{role}</span>
                       <span className="tl-org">{org}</span>
                       {location && <span className="tl-location">{location}</span>}
                       {detail   && <span className="tl-detail">{detail}</span>}
+                      {status   && <span className={`tl-cert-status tl-cert-status--${status}`}>{status}</span>}
                       <span className="tl-toggle-label" aria-hidden="true">
                         {isOpen ? '− Close' : '+ Read more'}
                       </span>
@@ -272,12 +310,13 @@ export default function AboutPage() {
                   ) : (
                     <>
                       <span className={`tl-type-badge tl-type-badge--${type}`}>
-                        {type === 'education' ? 'Education' : 'Experience'}
+                        {type === 'education' ? 'Education' : type === 'cert' ? 'Certification' : type === 'clearance' ? 'Clearance' : 'Experience'}
                       </span>
                       <span className="tl-role">{role}</span>
                       <span className="tl-org">{org}</span>
                       {location && <span className="tl-location">{location}</span>}
                       {detail   && <span className="tl-detail">{detail}</span>}
+                      {status   && <span className={`tl-cert-status tl-cert-status--${status}`}>{status}</span>}
                     </>
                   )}
 

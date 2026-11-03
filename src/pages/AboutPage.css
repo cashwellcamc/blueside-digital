@@ -239,6 +239,38 @@
   color: #2a9970;
 }
 
+.tl-type-badge--cert {
+  background: rgba(217, 119, 6, 0.09);
+  color: #b45309;
+}
+
+.tl-type-badge--clearance {
+  background: rgba(100, 116, 139, 0.10);
+  color: #475569;
+}
+
+.tl-cert-status {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.1rem 0.45rem;
+  border-radius: 3px;
+  margin-top: 0.15rem;
+  width: fit-content;
+}
+
+.tl-cert-status--expired {
+  background: rgba(239, 68, 68, 0.08);
+  color: #b91c1c;
+}
+
+.tl-cert-status--inactive {
+  background: rgba(100, 116, 139, 0.10);
+  color: #64748b;
+}
+
 .tl-role {
   display: block;
   font-size: 0.92rem;
