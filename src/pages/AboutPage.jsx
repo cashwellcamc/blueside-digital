@@ -135,6 +135,13 @@ const TIMELINE = [
     ],
   },
   {
+    period: 'Apr 2020',
+    type: 'cert',
+    role: 'Front-End Web Developer Certificate',
+    org: 'freeCodeCamp',
+    detail: 'Issued Apr 2020 · 400 hrs',
+  },
+  {
     period: 'Nov 2019',
     type: 'clearance',
     role: 'Public Trust Clearance',
@@ -227,6 +234,14 @@ const TIMELINE = [
         ],
       },
     ],
+  },
+  {
+    period: '2012 – 2013',
+    type: 'work',
+    role: 'Writer',
+    org: 'Smoking Designers',
+    location: 'Science and Technology',
+    detail: 'Wrote popular articles on Responsive Web Design during its initial inception.',
   },
   {
     period: '2008 – 2011',
